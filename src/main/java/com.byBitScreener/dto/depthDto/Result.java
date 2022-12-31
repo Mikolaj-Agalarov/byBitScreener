@@ -1,4 +1,4 @@
-package main.java.com.byBitScreener.dto.depth;
+package main.java.com.byBitScreener.dto.depthDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,7 +10,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class Result {
-    private Bid[] bid;
-    private Ask[] ask;
-    private Time[] time;
+    private Float[][] bids;
+    private Float[][] asks;
+    private Long time;
 }

@@ -2,8 +2,9 @@ package main.java.com.byBitScreener.service;
 
 import com.google.gson.Gson;
 import io.micrometer.core.instrument.util.IOUtils;
-import main.java.com.byBitScreener.dto.depth.ByBitDepthOfMarketDto;
-import main.java.com.byBitScreener.dto.symblos.ByBitTickersDto;
+import main.java.com.byBitScreener.dto.depthDto.ByBitDepthOfMarketDto;
+import main.java.com.byBitScreener.dto.depthDto.DepthDto;
+import main.java.com.byBitScreener.dto.symblosDto.ByBitTickersDto;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -13,13 +14,15 @@ import org.springframework.stereotype.Service;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 
 @Service
 public class ByBitService {
     private static final String API_MARKET_ENDPOINT = "https://api.bybit.com";
     private static final String SYMBOLS_ENDPOINT ="https://api.bybit.com/spot/v3/public/symbols";
-    
+
 
     public void getAllSpotTickersFromApiAndWriteThemToTxt() throws Exception {
         //Getting JSON and converting it into a String from response
@@ -67,19 +70,43 @@ public class ByBitService {
         }
     }
 
-    public void getDepthOfMarket() throws Exception {
-        ArrayList<String> arrayWithTickers = getTickersFromTxtToArrayList();
+    public ArrayList<DepthDto> getDepthOfMarket() throws Exception {
         Gson gson = new Gson();
         CloseableHttpClient client = HttpClients.createDefault();
-        HttpGet get = new HttpGet("https://api.bybit.com/spot/quote/v1/depth?symbol=ETHUSDT&limit=150");
-        CloseableHttpResponse response = client.execute(get);
-        String content = IOUtils.toString(response.getEntity().getContent());
+        ArrayList<String> arrayWithTickers = getTickersFromTxtToArrayList();
+        Integer USDTLimit = 100000;
+        ArrayList<DepthDto> arrayListWithDepthDto = new ArrayList<>();
 
-        ByBitDepthOfMarketDto resultDto = gson.fromJson(content, ByBitDepthOfMarketDto.class);
-        System.out.println("----------------");
-        ArrayList<String> listOfAsks = new ArrayList<>();
-//        Arrays.stream(resultDto.getResult().getList()).forEach(list -> listOfTickers.add(list.getName()));
-//        Arrays.stream(resultDto.getResult().getAsk()).forEach(ask -> System.out.println(ask.toString()));
+        for(int i = 0; i < 5; i++) {
+            HttpGet get = new HttpGet("https://api.bybit.com/spot/quote/v1/depth?symbol=" +
+                    arrayWithTickers.get(i) +
+                    "&limit=200");
+            CloseableHttpResponse response = client.execute(get);
+            String content = IOUtils.toString(response.getEntity().getContent());
+            ByBitDepthOfMarketDto resultDto = gson.fromJson(content, ByBitDepthOfMarketDto.class);
+            System.out.println("----------------");
 
+            DepthDto glassInstance = new DepthDto();
+            Map<Float, Float> mapOfAsks = new HashMap<>();
+            Map<Float, Float> mapOfBids = new HashMap<>();
+            Arrays.stream(resultDto.getResult().getAsks())
+                    .forEach(strings -> {
+                        if (strings[1]*strings[0] > USDTLimit) {
+                            mapOfAsks.put(strings[0], strings[1]);
+                        }
+                    });
+            Arrays.stream(resultDto.getResult().getBids())
+                    .forEach(strings -> {
+                        if (strings[1]*strings[0] > USDTLimit) {
+                            mapOfBids.put(strings[0], strings[1]);
+                        }
+                    });
+            glassInstance.setTickerName(arrayWithTickers.get(i));
+            glassInstance.setAsks(mapOfAsks);
+            glassInstance.setBids(mapOfBids);
+            arrayListWithDepthDto.add(glassInstance);
+        }
+        System.out.println(arrayListWithDepthDto.toString());
+        return arrayListWithDepthDto;
     }
 }

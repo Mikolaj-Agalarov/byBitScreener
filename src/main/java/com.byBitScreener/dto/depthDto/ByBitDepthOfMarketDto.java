@@ -1,4 +1,4 @@
-package main.java.com.byBitScreener.dto.depth;
+package main.java.com.byBitScreener.dto.depthDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

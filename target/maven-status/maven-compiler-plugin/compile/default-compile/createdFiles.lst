@@ -1,0 +1,11 @@
+main\java\com\byBitScreener\dto\exampleDto.class
+main\java\com\byBitScreener\dto\symblosDto\List.class
+main\java\com\byBitScreener\dto\depthDto\DepthDto.class
+main\java\com\byBitScreener\main.class
+main\java\com\byBitScreener\dto\depthDto\ByBitDepthOfMarketDto.class
+main\java\com\byBitScreener\UserApplication.class
+main\java\com\byBitScreener\dto\symblosDto\Result.class
+main\java\com\byBitScreener\service\ByBitService.class
+main\java\com\byBitScreener\controller\mainController.class
+main\java\com\byBitScreener\dto\symblosDto\ByBitTickersDto.class
+main\java\com\byBitScreener\dto\depthDto\Result.class
