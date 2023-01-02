@@ -1,4 +1,4 @@
-package main.resources;
+package main.java.com.byBitScreener;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

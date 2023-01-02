@@ -17,10 +17,6 @@ public class MainController {
     @GetMapping
     public String getPrice (Model model) throws Exception {
         ArrayList<DepthDto> arrayWithDOMs = byBitService.getDepthOfMarket();
-//        for (DepthDto glass : glasses) {
-//            model
-//        }
-
         model.addAttribute("glass", arrayWithDOMs);
         return "/mainPage";
 
