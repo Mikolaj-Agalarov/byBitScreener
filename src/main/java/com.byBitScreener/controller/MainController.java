@@ -18,7 +18,7 @@ public class MainController {
     public String getPrice (Model model) throws Exception {
         ArrayList<DepthDto> arrayWithDOMs = byBitService.getDepthOfMarket();
         model.addAttribute("glass", arrayWithDOMs);
-        return "/mainPage";
+        return "/mainPageJSP";
 
     }
 

@@ -71,11 +71,12 @@ public class ByBitService {
         Gson gson = new Gson();
         CloseableHttpClient client = HttpClients.createDefault();
         ArrayList<String> arrayWithTickers = getTickersFromTxtToArrayList();
-        Integer USDTLimit = 100000;
+        Integer USDTLimit = 60000;
         ArrayList<DepthDto> arrayListWithDepthDto = new ArrayList<>();
 
+        //getting JSONs from server and converting them to JAVA object
 //        for(int i = 0; i < arrayWithTickers.size(); i++) {
-        for(int i = 0; i < 5; i++) {
+        for(int i = 0; i < 15; i++) {
             HttpGet get = new HttpGet("https://api.bybit.com/spot/quote/v1/depth?symbol=" +
                     arrayWithTickers.get(i) +
                     "&limit=200");
@@ -83,7 +84,7 @@ public class ByBitService {
             String content = IOUtils.toString(response.getEntity().getContent());
             ByBitDepthOfMarketDto resultDto = gson.fromJson(content, ByBitDepthOfMarketDto.class);
             System.out.println("----------------");
-
+//filtrating asks and edding them to DepthDto object
             DepthDto glassInstance = new DepthDto();
             Map<Float, Float> mapOfAsks = new HashMap<>();
             Map<Float, Float> mapOfBids = new HashMap<>();
@@ -99,12 +100,61 @@ public class ByBitService {
                             mapOfBids.put(strings[0], strings[1]);
                         }
                     });
+            //Setting of Asks and Bids maps
             glassInstance.setTickerName(arrayWithTickers.get(i));
             glassInstance.setAsks(mapOfAsks);
             glassInstance.setBids(mapOfBids);
+
+            //Calculating the biggest ask and setting it
+            Collection<Float> askValuesCollection = glassInstance.getAsks().values();
+            Optional<Float> maxValueOfAsks = askValuesCollection.isEmpty() ? Optional.empty() :
+                    Optional.of(Collections.max(askValuesCollection));
+            glassInstance.setBiggestAsk(maxValueOfAsks);
+
+            //Calculating the biggest bid and setting it
+            Collection<Float> bidValuesCollection = glassInstance.getBids().values();
+            Optional<Float> maxValueOfBids = bidValuesCollection.isEmpty() ? Optional.empty() :
+                    Optional.of(Collections.max(bidValuesCollection));
+            glassInstance.setBiggestBid(maxValueOfBids);
+
+            //finding and setting current price of asset
+            Float currentPrice = (resultDto.getResult().getAsks()[0][0] + resultDto.getResult().getBids()[0][0]) / 2;
+            glassInstance.setCurrentPrice(currentPrice);
+
+            //adding DepthDto object to list
             arrayListWithDepthDto.add(glassInstance);
+
+            //calculating the percentage from biggestAsk to currentPrice
+            Float normalFlotMaxAskValue = maxValueOfAsks.orElse(0.0f);
+            Optional<Float> priceOfTheBiggestAsks = glassInstance.getAsks().entrySet().stream()
+                            .filter(floatFloatEntry -> normalFlotMaxAskValue.equals(floatFloatEntry.getValue()))
+                                    .map(Map.Entry::getKey)
+                                            .findFirst();
+
+            //calculating the percentage from biggestBid to currentPrice
+            Float normalFlotMaxBidValue = maxValueOfBids.orElse(0.0f);
+            Optional<Float> priceOfTheBiggestBid = glassInstance.getBids().entrySet().stream()
+                    .filter(floatFloatEntry -> normalFlotMaxBidValue.equals(floatFloatEntry.getValue()))
+                    .map(Map.Entry::getKey)
+                    .findFirst();
+
+            //calculating the percentage from the biggest ask to current price
+            Optional<Float> percentageFromBiggestAskToCurrentPrice =
+                    Optional.of((priceOfTheBiggestAsks.orElse(0.0f) / currentPrice));
+
+            //calculating the percentage from the biggest bid to current price
+            Optional<Float> percentageFromBiggestBidToCurrentPrice =
+                    Optional.of((priceOfTheBiggestBid.orElse(0.0f) / currentPrice));
+
+
+
+
+            System.out.println("from the biggest ask to current price" + percentageFromBiggestAskToCurrentPrice);
+            System.out.println("percentage from the biggest bid to current price" + percentageFromBiggestBidToCurrentPrice);
+
         }
-        System.out.println(arrayListWithDepthDto.get(0).getAsks().values());
+
+
         return arrayListWithDepthDto;
     }
 }

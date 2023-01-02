@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>main page</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" />
+</head>
+<body>
+<h3>Hello world</h3>
+<div style="margin: 20px">
+    <style>
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(200px, 1fr));
+            grid-gap: 10px;
+        }
+    </style>
+
+    <div class="grid" >
+<!--        <span th:each="depthDto:${glass}"-->
+<!--              th:if="${(not depthDto.bids.isEmpty or not depthDto.asks.isEmpty)-->
+<!--              and ((depthDto.percentageFromBiggestBidToCurrentPrice != null and-->
+<!--                            depthDto.percentageFromBiggestBidToCurrentPrice.orElse(0.0) < 10) or-->
+<!--                            (depthDto.percentageFromBiggestAskToCurrentPrice != null and-->
+<!--                            depthDto.percentageFromBiggestAskToCurrentPrice.orElse(0.0) <10))}">-->
+            <span th:each="depthDto:${glass}"
+                  th:if="${(not depthDto.bids.isEmpty or not depthDto.asks.isEmpty)}">
+                <div style="border: 1px solid black;">
+                    <div th:text="${depthDto.tickerName}" style="text-align: center"/>
+                    <span th:each="askPair : ${depthDto.asks.entrySet()}">
+                        <div th:if="${askPair.value == depthDto.biggestAsk.orElse(0.0)}"
+                             th:with="percentageFromAsktoCurrentPrice=
+                             ${#numbers.formatDecimal((askPair.key / depthDto.currentPrice) - 1, 1, 3)}"
+                             th:text="${askPair.key} + '  | '
+                             + ${percentageFromAsktoCurrentPrice} + '% |  ' + ${askPair.value}"
+                             style="background-color: indianred;"/>
+                    </span>
+                    <span th:each="askPair : ${depthDto.asks.entrySet()}" th:if="${askPairStat.count <= 2}">
+                        <div th:if="${askPair.value != null && askPair.value != depthDto.biggestAsk.orElse(0.0)}"
+                             th:with="percentageFromAsktoCurrentPrice=
+                             ${#numbers.formatDecimal((askPair.key / depthDto.currentPrice) - 1, 1, 3)}"
+                             th:text="${askPair.key} + '  | '
+                             + ${percentageFromAsktoCurrentPrice} + '% |  ' + ${askPair.value}" />
+                    </span>
+                    <span th:each="bidPair : ${depthDto.bids.entrySet()}">
+                        <div th:if="${bidPair.value == depthDto.biggestBid.orElse(0.0)}"
+                             th:with="percentageFromBidtoCurrentPrice=
+                             ${#numbers.formatDecimal((bidPair.key / depthDto.currentPrice) - 1, 1, 3)}"
+                             th:text="${bidPair.key} + '  | '
+                             + ${percentageFromBidtoCurrentPrice} + '% |  ' + ${bidPair.value}"
+                             style="background-color: darkseagreen;"/>
+                    </span>
+                    <span th:each="bidPair : ${depthDto.bids.entrySet()}" th:if="${bidPairStat.count <= 2}">
+                        <div th:if="${bidPair.value != null && bidPair.value != depthDto.biggestBid.orElse(0.0)}"
+                             th:with="percentageFromBidtoCurrentPrice=
+                             ${#numbers.formatDecimal((bidPair.key / depthDto.currentPrice) - 1, 1, 3)}"
+                             th:text="${bidPair.key} + '  | '
+                             + ${percentageFromBidtoCurrentPrice} + '% |  ' + ${bidPair.value}" />
+                    </span>
+<!--                        </span>-->
+                </div>
+
+        </span>
+    </div>
+</div>
+
+</body>
+</html>

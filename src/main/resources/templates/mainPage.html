@@ -22,34 +22,32 @@
                     <td th:text="${depthDto.tickerName}" />
                     <td>
                         <div th:each="askPair : ${depthDto.asks.entrySet()}">
-                            <div th:if="${depthDto.asks != null && depthDto.asks.size > 0}"
-                                 th:with="sortedAsks=${#lists.sort(depthDto.asks.values)}, sizeOfAskArray=${depthDto.asks.size}">
-                                <span th:if="${depthDto.asks != null && depthDto.asks.size > 0}"
-                                      th:with="maxAskValue=${sortedAsks[sizeOfAskArray - 1]}" />
-                                <p> Price:
-                                    <span th:if="${askPair.key != null}" th:text="${askPair.key}" />
-                                    Ask:
-                                    <span th:if="${askPair.value != null && askPair.value == maxAskValue}"
-                                      th:text="${askPair.value}" class="font-weight: bold" />
-                                    <span th:if="${askPair.value != null && askPair.value != maxAskValue}"
-                                      th:text="${askPair.value}" />
-                                </p>
-                            </div>
+                            <p> Price:
+                                <span th:text="${askPair.key}"; />
+                                Ask:
+                                <div style="background-color: darkred;">
+                                <span th:if="${askPair.value != null && askPair.value == depthDto.biggestAsk.orElse(0.0)}"
+                                  th:text="${askPair.value}" style="font-weight: bold" />
+                                </div>
+                                <div>
+                                <span th:if="${askPair.value != null && askPair.value != depthDto.biggestAsk.orElse(0.0)}"
+                                  th:text="${askPair.value}" />
+                                </div>
+                            </p>
                         </div>
                     </td>
                     <td>
                         <div th:each="bidPair : ${depthDto.bids.entrySet()}">
-                            <p>Price:
-                                <span th:if="${bidPair.key != null}" th:text="${bidPair.key}" />
+                            <p> Price:
+                                <span th:text="${bidPair.key}"; />
                                 Bid:
-
-
-<!--                                <span th:if="${depthDto.asks != null && depthDto.asks.size() > 0}"-->
-<!--                                      th:with="maxBidValue=${sortedAsks[0]}" />-->
-<!--                                <span th:if="${bidPair.value != null && bidPair.value == maxBidValue}"-->
-<!--                                      th:text="${bidPair.value}" class="bold" />-->
-<!--                                <span th:if="${bidPair.value != null && bidPair.value != maxBidValue}"-->
-<!--                                      th:text="${bidPair.value}" />-->
+                            <div style="background-color: darkgreen;">
+                                <span th:if="${bidPair.value != null && bidPair.value == depthDto.biggestBid.orElse(0.0)}"
+                                      th:text="${bidPair.value}" style="font-weight: bold" />
+                            </div>
+                            <div>
+                                <span th:if="${bidPair.value != null && bidPair.value != depthDto.biggestBid.orElse(0.0)}"
+                                      th:text="${bidPair.value}" />
                             </div>
                             </p>
                         </div>
