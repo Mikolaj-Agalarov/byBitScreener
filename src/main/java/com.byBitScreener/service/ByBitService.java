@@ -12,10 +12,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 
 @Service
@@ -77,6 +74,7 @@ public class ByBitService {
         Integer USDTLimit = 100000;
         ArrayList<DepthDto> arrayListWithDepthDto = new ArrayList<>();
 
+//        for(int i = 0; i < arrayWithTickers.size(); i++) {
         for(int i = 0; i < 5; i++) {
             HttpGet get = new HttpGet("https://api.bybit.com/spot/quote/v1/depth?symbol=" +
                     arrayWithTickers.get(i) +
@@ -106,7 +104,7 @@ public class ByBitService {
             glassInstance.setBids(mapOfBids);
             arrayListWithDepthDto.add(glassInstance);
         }
-        System.out.println(arrayListWithDepthDto.toString());
+        System.out.println(arrayListWithDepthDto.get(0).getAsks().values());
         return arrayListWithDepthDto;
     }
 }
