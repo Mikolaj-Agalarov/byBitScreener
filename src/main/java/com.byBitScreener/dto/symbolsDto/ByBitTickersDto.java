@@ -1,4 +1,4 @@
-package main.java.com.byBitScreener.dto.symblosDto;
+package main.java.com.byBitScreener.dto.symbolsDto;
 
 
 import lombok.AllArgsConstructor;

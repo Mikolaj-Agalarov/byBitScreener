@@ -24,12 +24,12 @@
                         <div th:each="askPair : ${depthDto.asks.entrySet()}">
                             <p>Price: <span th:if="${askPair.key != null}" th:text="${askPair.key}" />
                                 Ask:
-<!--                            <div th:if="${depthDto.asks.size() > 0}" th:with="maxAskValue=${#strings.max(depthDto.asks.values())}">-->
-                                    <span th:if="${askPair.value != null && askPair.value == maxAskValue}"
-                                          th:text="${askPair.value}" class="bold" />
-                                    <span th:if="${askPair.value != null && askPair.value != maxAskValue}"
-                                          th:text="${askPair.value}" />
-<!--                                </div>-->
+                            <div th:if="${depthDto.asks.size() > 0}" th:with="maxAskValue=${#strings.max(depthDto.asks.values())}">
+                                <span th:if="${askPair.value != null && askPair.value == maxAskValue}"
+                                      th:text="${askPair.value}" class="bold" />
+                                <span th:if="${askPair.value != null && askPair.value != maxAskValue}"
+                                      th:text="${askPair.value}" />
+                            </div>
                             </p>
                         </div>
                     </td>
@@ -37,12 +37,12 @@
                         <div th:each="bidPair : ${depthDto.bids.entrySet()}">
                             <p>Price: <span th:if="${bidPair.key != null}" th:text="${bidPair.key}" />
                                 Bid:
-                                <!--<div th:if="${depthDto.asks.size() > 0}" th:with="maxBidValue=${#strings.max(depthDto.asks.values())}">-->
+                            <div th:if="${depthDto.asks.size() > 0}" th:with="maxBidValue=${#strings.max(depthDto.asks.values())}">
                                 <span th:if="${bidPair.value != null && bidPair.value == maxBidValue}"
                                       th:text="${bidPair.value}" class="bold" />
                                 <span th:if="${bidPair.value != null && bidPair.value != maxBidValue}"
                                       th:text="${bidPair.value}" />
-                                <!--</div>-->
+                            </div>
                             </p>
                         </div>
                     </td>

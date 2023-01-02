@@ -1,4 +1,4 @@
-package main.java.com.byBitScreener.dto.depthDto;
+package main.java.com.byBitScreener.dto.symbolsDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,7 +10,5 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class Result {
-    private Float[][] bids;
-    private Float[][] asks;
-    private Long time;
+    private List[] list;
 }

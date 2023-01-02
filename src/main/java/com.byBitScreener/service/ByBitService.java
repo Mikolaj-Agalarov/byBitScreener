@@ -2,9 +2,9 @@ package main.java.com.byBitScreener.service;
 
 import com.google.gson.Gson;
 import io.micrometer.core.instrument.util.IOUtils;
-import main.java.com.byBitScreener.dto.depthDto.ByBitDepthOfMarketDto;
-import main.java.com.byBitScreener.dto.depthDto.DepthDto;
-import main.java.com.byBitScreener.dto.symblosDto.ByBitTickersDto;
+import main.java.com.byBitScreener.dto.DOMDto.ByBitDepthOfMarketDto;
+import main.java.com.byBitScreener.dto.DOMDto.DepthDto;
+import main.java.com.byBitScreener.dto.symbolsDto.ByBitTickersDto;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;

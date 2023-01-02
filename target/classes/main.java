@@ -1,4 +1,4 @@
-package main.java.com.byBitScreener;
+package main.resources;
 
 import main.java.com.byBitScreener.service.ByBitService;
 

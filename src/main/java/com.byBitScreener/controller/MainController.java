@@ -1,6 +1,6 @@
 package main.java.com.byBitScreener.controller;
 
-import main.java.com.byBitScreener.dto.depthDto.DepthDto;
+import main.java.com.byBitScreener.dto.DOMDto.DepthDto;
 import main.java.com.byBitScreener.service.ByBitService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 @Controller
 @RequestMapping("/")
-public class mainController {
+public class MainController {
     ByBitService byBitService = new ByBitService();
 
     @GetMapping
