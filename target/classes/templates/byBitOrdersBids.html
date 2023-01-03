@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" http-equiv="refresh" content="125">
+    <title>main page</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" />
+</head>
+<body>
+<div style="text-align: center">
+    <a href="http://localhost:8080/byBitScreener/bidsAndAsks">
+        <button>Bids And Asks</button>
+    </a>
+</div>
+<div style="margin: 20px">
+    <style>
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(200px, 1fr));
+            grid-gap: 10px;
+        }
+    </style>
+
+    <div class="grid" >
+        <!--               depthDto.percentageFromBiggestBidToCurrentPrice является null объектом, поэтому оно всегда true       -->
+                <span th:each="depthDto:${glass}"
+                      th:if="${(not depthDto.bids.isEmpty and depthDto.percentageFromBiggestBidToCurrentPrice < 10)}">
+                <div style="border: 1px solid black;">
+                    <div th:text="${depthDto.tickerName} + ' ' + ${depthDto.currentPrice} + ' ' + ${depthDto.percentageFromBiggestBidToCurrentPrice}" style="text-align: center"/>
+                    <span th:each="bidPair : ${depthDto.bids.entrySet()}">
+                        <div th:if="${bidPair.value == depthDto.biggestBid}"
+                             th:with="percentageFromBidtoCurrentPrice=
+                             ${#numbers.formatDecimal((((depthDto.currentPrice - bidPair.key) / bidPair.key) * 100), 1, 3)}"
+                             th:text="${bidPair.key} + '  | '
+                             + ${percentageFromBidtoCurrentPrice} + '% |  ' + ${bidPair.value}"
+                             style="background-color: darkseagreen;"/>
+                    </span>
+                    <span th:each="bidPair : ${depthDto.bids.entrySet()}" th:if="${bidPairStat.count <= 2}">
+                        <div th:if="${bidPair.value != null && bidPair.value != depthDto.biggestBid.orElse(0.0)}"
+                             th:with="percentageFromBidtoCurrentPrice=
+                             ${#numbers.formatDecimal((((depthDto.currentPrice - bidPair.key) / bidPair.key) * 100), 1, 3)}"
+                             th:text="${bidPair.key} + '  | '
+                             + ${percentageFromBidtoCurrentPrice} + '% |  ' + ${bidPair.value}"
+                             style="border: 1px solid darkseagreen;"/>
+                    </span>
+                </div>
+
+        </span>
+    </div>
+</div>
+
+</body>
+</html>

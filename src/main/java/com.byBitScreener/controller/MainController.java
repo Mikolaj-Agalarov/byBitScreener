@@ -10,15 +10,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.ArrayList;
 
 @Controller
-@RequestMapping("/")
+@RequestMapping("/byBitScreener")
 public class MainController {
     ByBitService byBitService = new ByBitService();
 
-    @GetMapping
-    public String getPrice (Model model) throws Exception {
+    @GetMapping("/bidsAndAsks")
+    public String getBidsAndAsks (Model model) throws Exception {
         ArrayList<DepthDto> arrayWithDOMs = byBitService.getDepthOfMarket();
         model.addAttribute("glass", arrayWithDOMs);
-        return "/mainPageJSP";
+        return "/byBitOrdersBidsAndAsks.html";
+
+    }
+
+    @GetMapping("/bids")
+    public String getBids (Model model) throws Exception {
+        ArrayList<DepthDto> arrayWithDOMs = byBitService.getDepthOfMarket();
+        model.addAttribute("glass", arrayWithDOMs);
+        return "/byBitOrdersBids.html";
 
     }
 

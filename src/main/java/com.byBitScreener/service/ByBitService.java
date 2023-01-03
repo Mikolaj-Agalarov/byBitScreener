@@ -76,7 +76,7 @@ public class ByBitService {
 
         //getting JSONs from server and converting them to JAVA object
 //        for(int i = 0; i < arrayWithTickers.size(); i++) {
-        for(int i = 0; i < 15; i++) {
+        for(int i = 0; i < 35; i++) {
             HttpGet get = new HttpGet("https://api.bybit.com/spot/quote/v1/depth?symbol=" +
                     arrayWithTickers.get(i) +
                     "&limit=200");
@@ -138,17 +138,16 @@ public class ByBitService {
                     .map(Map.Entry::getKey)
                     .findFirst();
 
-            //calculating the percentage from the biggest ask to current price
+            //calculating how much percent ask should decrease to become equal to current price
             Optional<Float> percentageFromBiggestAskToCurrentPrice =
-                    Optional.of((priceOfTheBiggestAsks.orElse(0.0f) / currentPrice));
+                    Optional.of((((priceOfTheBiggestAsks.orElse(0.0f) - currentPrice) / priceOfTheBiggestAsks.orElse(0.0f)))*100);
 
             //calculating the percentage from the biggest bid to current price
             Optional<Float> percentageFromBiggestBidToCurrentPrice =
-                    Optional.of((priceOfTheBiggestBid.orElse(0.0f) / currentPrice));
+                    Optional.of((((currentPrice - priceOfTheBiggestBid.orElse(0.0f)) / priceOfTheBiggestBid.orElse(0.0f)))*100);
 
 
-
-
+            System.out.println(glassInstance.getTickerName());
             System.out.println("from the biggest ask to current price" + percentageFromBiggestAskToCurrentPrice);
             System.out.println("percentage from the biggest bid to current price" + percentageFromBiggestBidToCurrentPrice);
 
