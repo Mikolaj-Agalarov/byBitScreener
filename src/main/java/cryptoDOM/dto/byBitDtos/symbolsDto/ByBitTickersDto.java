@@ -1,4 +1,5 @@
-package main.java.com.byBitScreener.dto.DOMDto;
+package cryptoDOM.dto.symbolsDto;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,10 +10,10 @@ import lombok.ToString;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ByBitDepthOfMarketDto {
-    private String ret_code;
-    private String ret_msg;
-    private Result result;
+public class ByBitTickersDto {
+    private String retCode;
+    private String retMsg;
     private String ext_info;
-    private String ext_code;
+    private Result result;
+    private String time_now;
 }

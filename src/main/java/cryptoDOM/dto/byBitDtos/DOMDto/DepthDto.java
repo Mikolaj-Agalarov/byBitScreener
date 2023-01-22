@@ -1,4 +1,4 @@
-package main.java.com.byBitScreener.dto.DOMDto;
+package cryptoDOM.dto.DOMDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

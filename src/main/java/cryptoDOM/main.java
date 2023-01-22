@@ -1,8 +1,6 @@
 package main.resources;
 
-import main.java.com.byBitScreener.service.ByBitService;
-
-import java.io.IOException;
+import main.java.com.cryptoDOM.service.byBitServices.ByBitService;
 
 public class main {
     public static void main(String[] args) throws Exception {

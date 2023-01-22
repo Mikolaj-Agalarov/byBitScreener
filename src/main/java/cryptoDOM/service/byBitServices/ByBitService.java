@@ -1,10 +1,10 @@
-package main.java.com.byBitScreener.service;
+package cryptoDOM.service;
 
 import com.google.gson.Gson;
+import cryptoDOM.dto.DOMDto.ByBitDepthOfMarketDto;
+import cryptoDOM.dto.DOMDto.DepthDto;
+import cryptoDOM.dto.symbolsDto.ByBitTickersDto;
 import io.micrometer.core.instrument.util.IOUtils;
-import main.java.com.byBitScreener.dto.DOMDto.ByBitDepthOfMarketDto;
-import main.java.com.byBitScreener.dto.DOMDto.DepthDto;
-import main.java.com.byBitScreener.dto.symbolsDto.ByBitTickersDto;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -76,7 +76,7 @@ public class ByBitService {
 
         //getting JSONs from server and converting them to JAVA object
 //        for(int i = 0; i < arrayWithTickers.size(); i++) {
-        for(int i = 0; i < 35; i++) {
+        for(int i = 0; i < 15; i++) {
             HttpGet get = new HttpGet("https://api.bybit.com/spot/quote/v1/depth?symbol=" +
                     arrayWithTickers.get(i) +
                     "&limit=200");
@@ -145,6 +145,9 @@ public class ByBitService {
             //calculating the percentage from the biggest bid to current price
             Optional<Float> percentageFromBiggestBidToCurrentPrice =
                     Optional.of((((currentPrice - priceOfTheBiggestBid.orElse(0.0f)) / priceOfTheBiggestBid.orElse(0.0f)))*100);
+
+            glassInstance.setPercentageFromBiggestAskToCurrentPrice(percentageFromBiggestAskToCurrentPrice);
+            glassInstance.setPercentageFromBiggestBidToCurrentPrice(percentageFromBiggestBidToCurrentPrice);
 
 
             System.out.println(glassInstance.getTickerName());

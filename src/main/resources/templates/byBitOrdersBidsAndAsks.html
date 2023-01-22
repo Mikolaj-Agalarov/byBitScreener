@@ -3,68 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <title>main page</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" />
-</head>
-<body>
-<div style="text-align: center; background-color: antiquewhite" >
-    <a href="http://localhost:8080/byBitScreener/bids">
-        <button>Bids Only</button>
-    </a>
-</div>
-<div style="margin: 20px">
+    <link rel="stylesheet" type="text/css" href="src/main/resources/templates/styles.css" />
     <style>
+        .sidebar {
+            position: fixed;
+            top: -300px;
+            transition: top 0.5s;
+            padding-right: 10px;
+            padding-left: 10px;
+            height: 50px;
+            width: 100%;
+            left: 0;
+            display: flex;
+            flex-direction: row;
+            background-color: #E0BB76;
+        }
+        .beautiful-button {
+            background-color: white;
+            color: black;
+            border: 2px solid black;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.2s, color 0.2s;
+        }
+        .beautiful-button:hover {
+            background-color: black;
+            color: white;
+        }
         .grid {
             display: grid;
             grid-template-columns: repeat(4, minmax(200px, 1fr));
             grid-gap: 10px;
         }
     </style>
+    <script>
+        window.onmousemove = function(event) {
+            var sidebar = document.querySelector('.sidebar');
+            if (event.pageY < 120) {
+                sidebar.style.top = '0';
+            } else {
+                sidebar.style.top = '-300px';
+            }
+        }
+    </script>
+</head>
+<body>
+<div class="container">
+    <div class="sidebar" >
+        <div >
+            <a href="http://localhost:8080/byBitScreener/bidsAndAsks">
+                <button class="beautiful-button">Bids And Asks</button>
+            </a>
+        </div>
+        <div >
+            <a href="http://localhost:8080/byBitScreener/bids">
+                <button class="beautiful-button">Bids Only</button>
+            </a>
+        </div>
+    </div>
+    <div style="margin-top: 60px">
+        <div class="grid" style="font-weight: bold;">
+                    <span th:each="depthDto:${glass}"
+                          th:if="${(not depthDto.bids.isEmpty or not depthDto.asks.isEmpty) and
+                                ((depthDto.percentageFromBiggestBidToCurrentPrice.orElse(0.0) < 10) or
+                                (depthDto.percentageFromBiggestAskToCurrentPrice.orElse(0.0) < 10))}">
+                    <div style="border: 1px solid black;">
+                        <div th:text="${depthDto.tickerName} + ' ' + ${depthDto.currentPrice}" style="text-align: center; background-color: #0F0F0D; color: white"/>
+                        <span th:each="askPair : ${depthDto.asks.entrySet()}">
+                            <div th:if="${askPair.value == depthDto.biggestAsk.orElse(0.0)}"
+                                 th:with="percentageFromAsktoCurrentPrice=
+                                 ${#numbers.formatDecimal((((askPair.key - depthDto.currentPrice) / askPair.key) * 100), 1, 3)}"
+                                 th:text="${askPair.key} + '  | '
+                                 + ${percentageFromAsktoCurrentPrice} + '% |  ' + ${askPair.value}"
+                                 style="background-color: #E76020;"/>
+                        </span>
+                        <span th:each="askPair : ${depthDto.asks.entrySet()}" th:if="${askPairStat.count <= 2}">
+                            <div th:if="${askPair.value != null && askPair.value != depthDto.biggestAsk.orElse(0.0)}"
+                                 th:with="percentageFromAsktoCurrentPrice=
+                                 ${#numbers.formatDecimal((((askPair.key - depthDto.currentPrice) / askPair.key) * 100), 1, 3)}"
+                                 th:text="${askPair.key} + '  | '
+                                 + ${percentageFromAsktoCurrentPrice} + '% |  ' + ${askPair.value}"
+                            style="border: 1px solid #E76020;"/>
+                        </span>
+                        <span th:each="bidPair : ${depthDto.bids.entrySet()}">
+                            <div th:if="${bidPair.value == depthDto.biggestBid.orElse(0.0)}"
+                                 th:with="percentageFromBidtoCurrentPrice=
+                                 ${#numbers.formatDecimal((((depthDto.currentPrice - bidPair.key) / bidPair.key) * 100), 1, 3)}"
+                                 th:text="${bidPair.key} + '  | '
+                                 + ${percentageFromBidtoCurrentPrice} + '% |  ' + ${bidPair.value}"
+                                 style="background-color: #589C48;"/>
+                        </span>
+                        <span th:each="bidPair : ${depthDto.bids.entrySet()}" th:if="${bidPairStat.count <= 2}">
+                            <div th:if="${bidPair.value != null && bidPair.value != depthDto.biggestBid.orElse(0.0)}"
+                                 th:with="percentageFromBidtoCurrentPrice=
+                                 ${#numbers.formatDecimal((((depthDto.currentPrice - bidPair.key) / bidPair.key) * 100), 1, 3)}"
+                                 th:text="${bidPair.key} + '  | '
+                                 + ${percentageFromBidtoCurrentPrice} + '% |  ' + ${bidPair.value}"
+                            style="border: 1px solid #589C48;"/>
+                        </span>
+    <!--                        </span>-->
+                    </div>
 
-    <div class="grid" >
-                <span th:each="depthDto:${glass}"
-                      th:if="${(not depthDto.bids.isEmpty or not depthDto.asks.isEmpty) and
-                            ((depthDto.percentageFromBiggestBidToCurrentPrice < 10) or
-                            (depthDto.percentageFromBiggestAskToCurrentPrice < 10))}">
-                <div style="border: 1px solid black;">
-                    <div th:text="${depthDto.tickerName} + ' ' + ${depthDto.currentPrice}" style="text-align: center"/>
-                    <span th:each="askPair : ${depthDto.asks.entrySet()}">
-                        <div th:if="${askPair.value == depthDto.biggestAsk.orElse(0.0)}"
-                             th:with="percentageFromAsktoCurrentPrice=
-                             ${#numbers.formatDecimal((((askPair.key - depthDto.currentPrice) / askPair.key) * 100), 1, 3)}"
-                             th:text="${askPair.key} + '  | '
-                             + ${percentageFromAsktoCurrentPrice} + '% |  ' + ${askPair.value}"
-                             style="background-color: indianred;"/>
-                    </span>
-                    <span th:each="askPair : ${depthDto.asks.entrySet()}" th:if="${askPairStat.count <= 2}">
-                        <div th:if="${askPair.value != null && askPair.value != depthDto.biggestAsk.orElse(0.0)}"
-                             th:with="percentageFromAsktoCurrentPrice=
-                             ${#numbers.formatDecimal((((askPair.key - depthDto.currentPrice) / askPair.key) * 100), 1, 3)}"
-                             th:text="${askPair.key} + '  | '
-                             + ${percentageFromAsktoCurrentPrice} + '% |  ' + ${askPair.value}"
-                        style="border: 1px solid indianred;"/>
-                    </span>
-                    <span th:each="bidPair : ${depthDto.bids.entrySet()}">
-                        <div th:if="${bidPair.value == depthDto.biggestBid.orElse(0.0)}"
-                             th:with="percentageFromBidtoCurrentPrice=
-                             ${#numbers.formatDecimal((((depthDto.currentPrice - bidPair.key) / bidPair.key) * 100), 1, 3)}"
-                             th:text="${bidPair.key} + '  | '
-                             + ${percentageFromBidtoCurrentPrice} + '% |  ' + ${bidPair.value}"
-                             style="background-color: darkseagreen;"/>
-                    </span>
-                    <span th:each="bidPair : ${depthDto.bids.entrySet()}" th:if="${bidPairStat.count <= 2}">
-                        <div th:if="${bidPair.value != null && bidPair.value != depthDto.biggestBid.orElse(0.0)}"
-                             th:with="percentageFromBidtoCurrentPrice=
-                             ${#numbers.formatDecimal((((depthDto.currentPrice - bidPair.key) / bidPair.key) * 100), 1, 3)}"
-                             th:text="${bidPair.key} + '  | '
-                             + ${percentageFromBidtoCurrentPrice} + '% |  ' + ${bidPair.value}"
-                        style="border: 1px solid darkseagreen;"/>
-                    </span>
-<!--                        </span>-->
-                </div>
-
-        </span>
+            </span>
+        </div>
     </div>
 </div>
-
 </body>
 </html>

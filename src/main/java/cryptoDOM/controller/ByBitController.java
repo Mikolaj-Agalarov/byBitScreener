@@ -1,7 +1,7 @@
-package main.java.com.byBitScreener.controller;
+package cryptoDOM.controller;
 
-import main.java.com.byBitScreener.dto.DOMDto.DepthDto;
-import main.java.com.byBitScreener.service.ByBitService;
+import cryptoDOM.dto.byBitDtos.DOMDto.DepthDto;
+import cryptoDOM.service.byBitServices.ByBitService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
