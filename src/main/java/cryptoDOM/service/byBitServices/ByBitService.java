@@ -1,9 +1,9 @@
-package cryptoDOM.service;
+package cryptoDOM.service.byBitServices;
 
 import com.google.gson.Gson;
-import cryptoDOM.dto.DOMDto.ByBitDepthOfMarketDto;
-import cryptoDOM.dto.DOMDto.DepthDto;
-import cryptoDOM.dto.symbolsDto.ByBitTickersDto;
+import cryptoDOM.dto.byBitDtos.DOMDto.ByBitDepthOfMarketDto;
+import cryptoDOM.dto.byBitDtos.DOMDto.DepthDto;
+import cryptoDOM.dto.byBitDtos.symbolsDto.ByBitTickersDto;
 import io.micrometer.core.instrument.util.IOUtils;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -38,7 +38,7 @@ public class ByBitService {
             Arrays.stream(resultDto.getResult().getList()).forEach(list -> listOfTickers.add(list.getName()));
 
             //Clearing txt file and them writing all tickers from an array to it
-            FileWriter fileWriter = new FileWriter("D:\\TMS\\byBitScreener\\byBitScreener\\src\\main\\java\\com.byBitScreener\\tickers.txt");
+            FileWriter fileWriter = new FileWriter("D:\\TMS\\byBitScreener\\byBitScreener\\src\\main\\resources\\tickers\\tickersByBit.txt");
             PrintWriter printWriter = new PrintWriter(fileWriter);
             printWriter.print("");
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
@@ -55,8 +55,7 @@ public class ByBitService {
 
     public ArrayList<String> getTickersFromTxtToArrayList() {
         ArrayList<String> arrayWithTickers = new ArrayList<>();
-        try (BufferedReader txtReader = new BufferedReader(new FileReader("D:\\TMS\\byBitScreener\\" +
-                "byBitScreener\\src\\main\\java\\com.byBitScreener\\tickers.txt"))) {
+        try (BufferedReader txtReader = new BufferedReader(new FileReader("D:\\TMS\\byBitScreener\\byBitScreener\\src\\main\\resources\\tickers\\tickersByBit.txt"))) {
             String str;
             while ((str = txtReader.readLine()) != null) {
                 arrayWithTickers.add(str);
@@ -75,8 +74,8 @@ public class ByBitService {
         ArrayList<DepthDto> arrayListWithDepthDto = new ArrayList<>();
 
         //getting JSONs from server and converting them to JAVA object
-//        for(int i = 0; i < arrayWithTickers.size(); i++) {
-        for(int i = 0; i < 15; i++) {
+        for(int i = 0; i < arrayWithTickers.size(); i++) {
+//        for(int i = 0; i < 15; i++) {
             HttpGet get = new HttpGet("https://api.bybit.com/spot/quote/v1/depth?symbol=" +
                     arrayWithTickers.get(i) +
                     "&limit=200");

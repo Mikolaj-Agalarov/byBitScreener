@@ -1,4 +1,4 @@
-package cryptoDOM.dto.symbolsDto;
+package cryptoDOM.dto.byBitDtos.symbolsDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

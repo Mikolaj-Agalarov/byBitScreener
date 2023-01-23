@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 @Controller
 @RequestMapping("/byBitScreener")
-public class MainController {
+public class ByBitController {
     ByBitService byBitService = new ByBitService();
 
     @GetMapping("/bidsAndAsks")
