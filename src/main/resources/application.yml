@@ -5,6 +5,12 @@ spring:
     password: postgres
     url: jdbc:postgresql://localhost:5432/screener
 
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
 management:
   endpoints:
     web:

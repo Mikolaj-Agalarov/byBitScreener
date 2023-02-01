@@ -1,21 +1,17 @@
 package cryptoDOM.service;
 
 import cryptoDOM.model.User;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import repository.UserRepository;
+import cryptoDOM.repository.UserRepository;
 
 import java.util.List;
 
 @Service
 public class UserService {
-    private final UserRepository userRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    private UserRepository userRepository;
 
     public User saveUser(User user) {
         return userRepository.save(user);

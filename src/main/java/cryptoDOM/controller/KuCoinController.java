@@ -29,4 +29,11 @@ public class KuCoinController {
         model.addAttribute("ListOfGlassInstances", ListOfGlassInstances);
         return "/kuCoinBids.html";
     }
+
+    @GetMapping("/register")
+    public String register(Model model) throws Exception {
+        List<GlassInstance> ListOfGlassInstances = kuCoinService.getDepthOfMarket(10, 30000);
+        model.addAttribute("ListOfGlassInstances", ListOfGlassInstances);
+        return "/kuCoinBids.html";
+    }
 }
