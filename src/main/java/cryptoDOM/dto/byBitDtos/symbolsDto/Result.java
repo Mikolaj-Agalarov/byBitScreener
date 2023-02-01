@@ -10,5 +10,5 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class Result {
-    private List[] list;
+    private ListForDto[] list;
 }

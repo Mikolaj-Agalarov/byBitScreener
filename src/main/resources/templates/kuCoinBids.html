@@ -24,20 +24,20 @@
     }
   </style>
   <script>
-    function showHoverDiv() {
-      var hoverDiv = document.getElementById("hover-div");
-      hoverDiv.style.display = "block";
-      hoverDiv.style.left = event.clientX + "px";
-      hoverDiv.style.top = event.clientY + "px";
-    }
-
-    function hideHoverDiv() {
-      var hoverDiv = document.getElementById("hover-div");
-      hoverDiv.style.display = "none";
-    }
+      function toggleDarkMode() {
+          var button = document.getElementById("dark-mode-btn");
+          if (button.textContent === "Dark Mode") {
+              button.textContent = "Light Mode";
+          } else {
+              button.textContent = "Dark Mode";
+          }
+      }
   </script>
 </head>
 <body>
+<div>
+    <button id="dark-mode-btn" onclick="toggleDarkMode()">Dark Mode</button>
+</div>
 <div>
   <div class="grid" >
     <span th:each="glassInstance:${ListOfGlassInstances}"
@@ -83,7 +83,15 @@
                       th:each="bid:${glassInstance.bids}">
 
                     <div th:if="${glassInstance.priceOfBiggestBid != null &&
-                     glassInstance.priceOfBiggestBid == bid.get(0)}"
+                     glassInstance.priceOfBiggestBid == bid.get(0) && bid.get(0) < 0.0001}"
+                         th:text="${#numbers.formatDecimal(bid.get(0),1,10)} + ' | ' + ${bid.get(2)} +
+                         ' | ' + ${bid.get(1) > 1000000 ? (bid.get(1) / 1000000)
+                          + 'M' : (bid.get(1) > 1000 ? (bid.get(1) / 1000) + 'K' : bid.get(1))} +
+                          ' | ' + ${bid.get(0) * bid.get(1)} + '$'"
+                         style="background-color: darkgreen" />
+
+                    <div th:if="${glassInstance.priceOfBiggestBid != null &&
+                     glassInstance.priceOfBiggestBid == bid.get(0) && bid.get(0) > 0.0001}"
                          th:text="${bid.get(0)} + ' | ' + ${bid.get(2)} +
                          ' | ' + ${bid.get(1) > 1000000 ? (bid.get(1) / 1000000)
                           + 'M' : (bid.get(1) > 1000 ? (bid.get(1) / 1000) + 'K' : bid.get(1))} +

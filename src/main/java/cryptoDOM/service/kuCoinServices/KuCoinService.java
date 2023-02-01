@@ -1,6 +1,7 @@
 package cryptoDOM.service.kuCoinServices;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import cryptoDOM.dto.byBitDtos.DOMDto.DepthDto;
 import cryptoDOM.dto.kuCoinDtos.DOMDto.GlassInstance;
 import cryptoDOM.dto.kuCoinDtos.DOMDto.KuCoinDepthDto;
@@ -86,26 +87,30 @@ public class KuCoinService {
 
         for (String tickerName : listWithTickerNamesOfBtcEthKcs)
         {
-            HttpGet get = new HttpGet("https://openapi-v2.kucoin.com/api/v1/market/orderbook/level2_100?symbol=" +
-                    tickerName);
-            CloseableHttpResponse response = client.execute(get);
-            String content = IOUtils.toString(response.getEntity().getContent());
-            KuCoinDepthOfMarket resultDto = gson.fromJson(content, KuCoinDepthOfMarket.class);
-            if (tickerName.equals("BTC-USDT")) {
-                currentPriceOfBtc = Arrays.stream(resultDto.getData().getBids()).findFirst().get()[0];
-            } else if (tickerName.equals("ETH-USDT")) {
-                currentPriceOfEth = Arrays.stream(resultDto.getData().getBids()).findFirst().get()[0];
-            } else {
-                currentPriceOfKsc = Arrays.stream(resultDto.getData().getBids()).findFirst().get()[0];
+            try {
+                HttpGet get = new HttpGet("https://openapi-v2.kucoin.com/api/v1/market/orderbook/level2_100?symbol=" +
+                        tickerName);
+                CloseableHttpResponse response = client.execute(get);
+                String content = IOUtils.toString(response.getEntity().getContent());
+                KuCoinDepthOfMarket resultDto = gson.fromJson(content, KuCoinDepthOfMarket.class);
+                if (tickerName.equals("BTC-USDT")) {
+                    currentPriceOfBtc = Arrays.stream(resultDto.getData().getBids()).findFirst().get()[0];
+                } else if (tickerName.equals("ETH-USDT")) {
+                    currentPriceOfEth = Arrays.stream(resultDto.getData().getBids()).findFirst().get()[0];
+                } else {
+                    currentPriceOfKsc = Arrays.stream(resultDto.getData().getBids()).findFirst().get()[0];
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
         }
 
-        List<GlassInstance> glassInstances = new ArrayList<>();
+            List<GlassInstance> glassInstances = new ArrayList<>();
         Float percentageRange = (float) scanningrange;
         Float minOrderValue = (float) minValueInUsd;
 //        тут будет фор луп для каждого тикера, если название тикера содержит BTC-USDT or ETH-USDT or KCS-USDt записываем данные
-//        for (int i = 1; i < arrayWithTickers.size(); i++)
-        for (int i = 0; i < 200; i++)
+        for (int i = 1; i < arrayWithTickers.size(); i++)
+//        for (int i = 0; i < 100; i++)
         {
             long startTime = System.currentTimeMillis();
 

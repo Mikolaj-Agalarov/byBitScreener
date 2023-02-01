@@ -9,7 +9,7 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class List {
+public class ListForDto {
     private String name;
     private String alias;
     private String baseCoin;
