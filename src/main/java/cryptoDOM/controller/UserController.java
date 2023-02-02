@@ -4,30 +4,41 @@ import cryptoDOM.dto.UserDto;
 import cryptoDOM.model.User;
 import cryptoDOM.service.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
+
+import java.util.List;
 
 @Controller
 @AllArgsConstructor
 @RequestMapping("/registration")
 public class UserController {
-    private final UserService userService;
+    @Autowired
+    private UserService userService;
 
     @GetMapping
-    protected String userRegistration(Model model) {
-        model.addAttribute("dto", new UserDto());
+    public String userRegistration(Model model) {
         return "registration";
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public RedirectView userRegistration(@ModelAttribute("dto") final User dto) {
-            userService.saveUser(dto);
-            return new RedirectView("/users");
+    @PostMapping
+    public RedirectView userRegistration(@RequestParam String username,
+                                         @RequestParam String password,
+                                         @RequestParam String role,
+                                         @RequestParam String email,
+                                         Model model) {
+        User newUser = new User(username, password, role, email);
+        return new RedirectView("allUsers");
+    }
+
+    @GetMapping("/showAll")
+    public String showAllUsers(Model model) {
+        List<User> users = userService.findAll();
+        model.addAttribute("users", users);
+        return "allUsers";
     }
 }
