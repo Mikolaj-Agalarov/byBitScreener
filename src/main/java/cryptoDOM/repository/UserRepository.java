@@ -15,6 +15,6 @@ import java.util.Optional;
 import java.util.function.Function;
 
 @Repository
-public interface UserRepository extends CrudRepository<User, Long> {
+public interface UserRepository extends JpaRepository<User, Long> {
 
 }

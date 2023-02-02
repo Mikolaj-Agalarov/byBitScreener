@@ -1,24 +1,28 @@
 package cryptoDOM.controller;
 
-import cryptoDOM.dto.UserDto;
-import cryptoDOM.model.User;
+import cryptoDOM.dto.UserDtoRequest;
+import cryptoDOM.dto.UserDtoResponse;
 import cryptoDOM.service.UserService;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
 
 @Controller
-@AllArgsConstructor
 @RequestMapping("/registration")
 public class UserController {
-    @Autowired
-    private UserService userService;
+
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping
     public String userRegistration(Model model) {
@@ -26,18 +30,14 @@ public class UserController {
     }
 
     @PostMapping
-    public RedirectView userRegistration(@RequestParam String username,
-                                         @RequestParam String password,
-                                         @RequestParam String role,
-                                         @RequestParam String email,
-                                         Model model) {
-        User newUser = new User(username, password, role, email);
+    public RedirectView userRegistration(@RequestBody UserDtoRequest userDto) {
+        userService.saveUser(userDto);
         return new RedirectView("allUsers");
     }
 
     @GetMapping("/showAll")
     public String showAllUsers(Model model) {
-        List<User> users = userService.findAll();
+        List<UserDtoResponse> users = userService.findAll();
         model.addAttribute("users", users);
         return "allUsers";
     }

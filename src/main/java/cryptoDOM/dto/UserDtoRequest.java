@@ -3,8 +3,8 @@ package cryptoDOM.dto;
 import lombok.Data;
 
 @Data
-public class UserDto {
+public class UserDtoRequest {
     private String username;
+    private String email;
     private String password;
-    private String role;
 }
