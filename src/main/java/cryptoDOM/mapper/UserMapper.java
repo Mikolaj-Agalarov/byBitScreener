@@ -6,9 +6,10 @@ import cryptoDOM.model.User;
 
 public class UserMapper {
     public static User fromDTO(User user, UserDtoRequest userDto){
-        user.setEmail(user.getEmail());
+        user.setEmail(userDto.getEmail());
         user.setPassword(userDto.getPassword());
         user.setUsername(userDto.getUsername());
+        user.setRole(userDto.getRole());
         return user;
     }
 
