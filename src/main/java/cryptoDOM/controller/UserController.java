@@ -31,9 +31,11 @@ public class UserController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public RedirectView userRegistration(UserDtoRequest userDto) {
+    public String userRegistration(UserDtoRequest userDto, Model model) {
         userService.saveUser(userDto);
-        return new RedirectView("allUsers");
+        List<UserDtoResponse> users = userService.findAll();
+        model.addAttribute("users", users);
+        return ("allUsers");
     }
 
     @GetMapping("/showAll")

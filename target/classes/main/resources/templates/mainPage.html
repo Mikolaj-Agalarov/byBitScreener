@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>main page</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" />
+</head>
+<body>
+<h3>Hello world</h3>
+<div style="margin: 20px">
+    <table class="table table-bordered table-dark">
+        <thead>
+            <tr>
+                <th scope="col">name</th>
+                <th scope="col">asks</th>
+                <th scope="col">bids</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr scope="row" th:each="depthDto: ${glass}">
+                <div th:if="${not depthDto.bids.isEmpty or not depthDto.asks.isEmpty}">
+                    <td th:text="${depthDto.tickerName}" />
+                    <td>
+                        <div th:each="askPair : ${depthDto.asks.entrySet()}">
+                            <p> Price:
+                                <span th:text="${askPair.key}"; />
+                                Ask:
+                                <div style="background-color: darkred;">
+                                <span th:if="${askPair.value != null && askPair.value == depthDto.biggestAsk.orElse(0.0)}"
+                                  th:text="${askPair.value}" style="font-weight: bold" />
+                                </div>
+                                <div>
+                                <span th:if="${askPair.value != null && askPair.value != depthDto.biggestAsk.orElse(0.0)}"
+                                  th:text="${askPair.value}" />
+                                </div>
+                            </p>
+                        </div>
+                    </td>
+                    <td>
+                        <div th:each="bidPair : ${depthDto.bids.entrySet()}">
+                            <p> Price:
+                                <span th:text="${bidPair.key}"; />
+                                Bid:
+                            <div style="background-color: darkgreen;">
+                                <span th:if="${bidPair.value != null && bidPair.value == depthDto.biggestBid.orElse(0.0)}"
+                                      th:text="${bidPair.value}" style="font-weight: bold" />
+                            </div>
+                            <div>
+                                <span th:if="${bidPair.value != null && bidPair.value != depthDto.biggestBid.orElse(0.0)}"
+                                      th:text="${bidPair.value}" />
+                            </div>
+                            </p>
+                        </div>
+                    </td>
+                </div>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

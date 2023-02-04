@@ -58,7 +58,7 @@ public class KuCoinService {
 
     public ArrayList<String> getTickersFromTxtToArrayList() {
         ArrayList<String> arrayWithTickers = new ArrayList<>();
-        try (BufferedReader txtReader = new BufferedReader(new FileReader("D:\\TMS\\byBitScreener\\byBitScreener\\src\\main\\resources\\tickers\\tickersKuCoin.txt"))) {
+        try (BufferedReader txtReader = new BufferedReader(new FileReader("D:\\TMS\\byBitScreener\\src\\main\\resources\\tickers\\tickersKuCoin.txt"))) {
             String str;
             while ((str = txtReader.readLine()) != null) {
                 arrayWithTickers.add(str);

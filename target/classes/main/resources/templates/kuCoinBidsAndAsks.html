@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" http-equiv="refresh" content="25">
+    <title>Title</title>
+    <style>
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(200px, 1fr));
+            grid-gap: 10px;
+        }
+        .hello-world {
+            /* Styling for the hello-world div */
+        }
+
+        .hover-div {
+            /* Styling for the hover-div */
+            display: none; /* Initially hide the hover-div */
+            position: absolute; /* Position the hover-div absolutely */
+        }
+
+        .hello-world:hover + .hover-div {
+            display: block; /* Show the hover-div when the hello-world div is hovered over */
+        }
+    </style>
+    <script>
+        function showHoverDiv() {
+            var hoverDiv = document.getElementById("hover-div");
+            hoverDiv.style.display = "block";
+            hoverDiv.style.left = event.clientX + "px";
+            hoverDiv.style.top = event.clientY + "px";
+        }
+
+        function hideHoverDiv() {
+            var hoverDiv = document.getElementById("hover-div");
+            hoverDiv.style.display = "none";
+        }
+    </script>
+</head>
+<body>
+<div>
+    <div class="grid" >
+        <span th:each="glassInstance:${ListOfGlassInstances}">
+            <div style="border: 1px solid black">
+                <div th:text="${glassInstance.tickerName}"
+                     style="text-align: center; background-color: #0F0F0D; color: white"/>
+                    <span th:if="${!glassInstance.asks.isEmpty}"
+                            th:each="ask:${glassInstance.asks}">
+
+                        <div th:if="${glassInstance.priceOfBiggestAsk != null &&
+                         glassInstance.priceOfBiggestAsk == ask.get(0)}"
+                             th:text="${ask.get(0)} + ' | ' + ${ask.get(2)} +
+                              ' | ' + ${ask.get(1) > 1000000 ? (ask.get(1) / 1000000)
+                               + 'M' : (ask.get(1) > 1000 ? (ask.get(1) / 1000) + 'K' : ask.get(1))} +
+                               ' | ' + ${ask.get(0)*ask.get(1)} + '$'"
+                             style="background-color: red" />
+                        <div id="hover-box"></div>
+
+                        <div th:if="${glassInstance.priceOfBiggestAsk != null &&
+                         glassInstance.priceOfBiggestAsk != ask.get(0)}"
+                                th:text="${ask.get(0)} + ' | ' + ${ask.get(2)} +
+                                 ' | ' + ${ask.get(1) > 1000000 ? (ask.get(1) / 1000000)
+                                  + 'M' : (ask.get(1) > 1000 ? (ask.get(1) / 1000) + 'K' : ask.get(1))} +
+                               ' | ' + ${ask.get(0)*ask.get(1)} + '$'"
+                             style="background-color: indianred"/>
+
+                        <div th:if="${glassInstance.priceOfBiggestAsk == null}"
+                             th:text="${ask.get(0)} + ' | ' + ${ask.get(2)} +
+                              ' | ' + ${ask.get(1) > 1000000 ? (ask.get(1) / 1000000)
+                               + 'M' : (ask.get(1) > 1000 ? (ask.get(1) / 1000) + 'K' : ask.get(1))} +
+                               ' | ' + ${ask.get(0)*ask.get(1)} + '$'"
+                             style="border-color: indianred"/>
+                    </span>
+
+                    <span th:if="${!glassInstance.bids.isEmpty}"
+                            th:each="bid:${glassInstance.bids}">
+
+                        <div th:if="${glassInstance.priceOfBiggestBid != null &&
+                         glassInstance.priceOfBiggestBid == bid.get(0)}"
+                             th:text="${bid.get(0)} + ' | ' + ${bid.get(2)} +
+                             ' | ' + ${bid.get(1) > 1000000 ? (bid.get(1) / 1000000)
+                              + 'M' : (bid.get(1) > 1000 ? (bid.get(1) / 1000) + 'K' : bid.get(1))} +
+                              ' | ' + ${bid.get(0)*bid.get(1)} + '$'"
+                             style="background-color: darkgreen" />
+
+                        <div th:if="${glassInstance.priceOfBiggestBid != null &&
+                         glassInstance.priceOfBiggestBid != bid.get(0)}"
+                             th:text="${bid.get(0)} + ' | ' + ${bid.get(2)} +
+                              ' | ' + ${bid.get(1) > 1000000 ? (bid.get(1) / 1000000)
+                               + 'M' : (bid.get(1) > 1000 ? (bid.get(1) / 1000) + 'K' : bid.get(1))} +
+                               ' | ' + ${bid.get(0)*bid.get(1)} + '$'"
+                             style="background-color: darkseagreen"/>
+
+                        <div th:if="${glassInstance.priceOfBiggestAsk == null &&
+                         glassInstance.priceOfBiggestBid != bid.get(0)}"
+                             th:text="${bid.get(0)} + ' | ' + ${bid.get(2)} +
+                             ' | ' + ${bid.get(1) > 1000000 ? (bid.get(1) / 1000000)
+                              + 'M' : (bid.get(1) > 1000 ? (bid.get(1) / 1000) + 'K' : bid.get(1))} +
+                              ' | ' + ${bid.get(0)*bid.get(1)} + '$'"
+                             style="border-color: darkseagreen"/>
+                    </span>
+            </div>
+
+        </span>
+    </div>
+</div>
+
+</body>
+</html>
