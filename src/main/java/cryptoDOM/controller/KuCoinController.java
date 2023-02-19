@@ -1,7 +1,6 @@
 package cryptoDOM.controller;
 
 import cryptoDOM.dto.kuCoinDtos.DOMDto.GlassInstance;
-import cryptoDOM.dto.kuCoinDtos.DOMDto.KuCoinDepthDto;
 import cryptoDOM.service.kuCoinServices.KuCoinService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

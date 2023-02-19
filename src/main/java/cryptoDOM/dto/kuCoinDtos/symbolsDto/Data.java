@@ -1,5 +1,6 @@
 package cryptoDOM.dto.kuCoinDtos.symbolsDto;
 
+import com.google.gson.annotations.SerializedName;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -9,21 +10,51 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Data {
+    @SerializedName("symbol")
     private String symbol;
-    private String name;
-    private String baseCurrency;
-    private String quoteCurrency;
-    private String feeCurrency;
-    private String market;
-    private String baseMinSize;
-    private String quoteMinSize;
-    private String baseMaxSize;
-    private String quoteMaxSize;
-    private String baseIncrement;
-    private String quoteIncrement;
-    private String priceIncrement;
-    private String priceLimitRate;
-    private String minFunds;
-    private String isMarginEnabled;
-    private String enableTrading;
+
+    @SerializedName("symbolName")
+    private String symbolName;
+
+    @SerializedName("buy")
+    private String buy;
+
+    @SerializedName("sell")
+    private String sell;
+
+    @SerializedName("changeRate")
+    private String changeRate;
+
+    @SerializedName("changePrice")
+    private String changePrice;
+
+    @SerializedName("high")
+    private String high;
+
+    @SerializedName("low")
+    private String low;
+
+    @SerializedName("vol")
+    private String vol;
+
+    @SerializedName("volValue")
+    private String volValue;
+
+    @SerializedName("last")
+    private String last;
+
+    @SerializedName("averagePrice")
+    private String averagePrice;
+
+    @SerializedName("takerFeeRate")
+    private String takerFeeRate;
+
+    @SerializedName("makerFeeRate")
+    private String makerFeeRate;
+
+    @SerializedName("takerCoefficient")
+    private String takerCoefficient;
+
+    @SerializedName("makerCoefficient")
+    private String makerCoefficient;
 }

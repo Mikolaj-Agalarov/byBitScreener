@@ -1,12 +1,11 @@
 package cryptoDOM.service.kuCoinServices;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 import cryptoDOM.dto.byBitDtos.DOMDto.DepthDto;
 import cryptoDOM.dto.kuCoinDtos.DOMDto.GlassInstance;
-import cryptoDOM.dto.kuCoinDtos.DOMDto.KuCoinDepthDto;
-import cryptoDOM.dto.kuCoinDtos.DOMDto.KuCoinDepthOfMarket;
-import cryptoDOM.dto.kuCoinDtos.symbolsDto.kuCoinTickerDto;
+import cryptoDOM.dto.kuCoinDtos.DOMDto.kucoinDOM;
+import cryptoDOM.dto.kuCoinDtos.DOMDto.KucoinObjectFromJSON;
+import cryptoDOM.dto.kuCoinDtos.symbolsDto.KuCoinTickerDto;
 import io.micrometer.core.instrument.util.IOUtils;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -16,9 +15,11 @@ import org.apache.http.impl.client.HttpClients;
 import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+
 
 public class KuCoinService {
+
+
     private static final String API_MARKET_ENDPOINT = "https://openapi-v2.kucoin.com/";
     private static final String SYMBOLS_ENDPOINT = "https://openapi-v2.kucoin.com/api/v1/symbols";
 
@@ -33,10 +34,11 @@ public class KuCoinService {
 
         if (response.getStatusLine().getStatusCode() == 200) {
             //Converting String JSON to DTO java object with gson library
-            kuCoinTickerDto resultDto = gson.fromJson(content, kuCoinTickerDto.class);
+            KuCoinTickerDto resultDto = gson.fromJson(content, KuCoinTickerDto.class);
             System.out.println("----------------");
             ArrayList<String> listOfTickers = new ArrayList<>();
             Arrays.stream(resultDto.getData()).forEach(data -> listOfTickers.add(data.getSymbol()));
+
 
 
             //Clearing txt file and them writing all tickers from an array to it
@@ -92,7 +94,7 @@ public class KuCoinService {
                         tickerName);
                 CloseableHttpResponse response = client.execute(get);
                 String content = IOUtils.toString(response.getEntity().getContent());
-                KuCoinDepthOfMarket resultDto = gson.fromJson(content, KuCoinDepthOfMarket.class);
+                KucoinObjectFromJSON resultDto = gson.fromJson(content, KucoinObjectFromJSON.class);
                 if (tickerName.equals("BTC-USDT")) {
                     currentPriceOfBtc = Arrays.stream(resultDto.getData().getBids()).findFirst().get()[0];
                 } else if (tickerName.equals("ETH-USDT")) {
@@ -118,9 +120,9 @@ public class KuCoinService {
                     arrayWithTickers.get(i));
             CloseableHttpResponse response = client.execute(get);
             String content = IOUtils.toString(response.getEntity().getContent());
-            KuCoinDepthOfMarket resultDto = gson.fromJson(content, KuCoinDepthOfMarket.class);
+            KucoinObjectFromJSON resultDto = gson.fromJson(content, KucoinObjectFromJSON.class);
 
-            KuCoinDepthDto kuCoinDepthDto = new KuCoinDepthDto();
+            kucoinDOM kuCoinDepthDto = new kucoinDOM();
             List<List<Float>> listOfAsks = new ArrayList<>();
             List<List<Float>> listOfBids = new ArrayList<>();
 

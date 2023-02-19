@@ -1,25 +1,22 @@
 package cryptoDOM.mapper;
 
-import cryptoDOM.dto.UserDtoRequest;
-import cryptoDOM.dto.UserDtoResponse;
-import cryptoDOM.model.User;
+import cryptoDOM.dto.UserDTO;
+import cryptoDOM.entity.User;
 
 public class UserMapper {
-    public static User fromDTO(User user, UserDtoRequest userDto){
-        user.setEmail(userDto.getEmail());
-        user.setPassword(userDto.getPassword());
-        user.setUsername(userDto.getUsername());
-        user.setRole(userDto.getRole());
+    public static User fromUserDTOtoUser (UserDTO userDTO) {
+        User user = new User();
+        user.setUsername(userDTO.getUsername());
+        user.setPassword(userDTO.getPassword());
+        user.setEmail(userDTO.getEmail());
         return user;
     }
 
-    public static UserDtoResponse fromEntity(User entity){
-        UserDtoResponse user = new UserDtoResponse();
-        user.setEmail(entity.getEmail());
-        user.setPassword(entity.getPassword());
-        user.setUsername(entity.getUsername());
-        user.setRole(entity.getRole());
-        user.setId(entity.getId());
-        return user;
+    public static UserDTO fromUserToUserDTO (User user) {
+        UserDTO userDTO = new UserDTO();
+        userDTO.setUsername(user.getUsername());
+        userDTO.setPassword(user.getPassword());
+        userDTO.setEmail(user.getEmail());
+        return userDTO;
     }
 }

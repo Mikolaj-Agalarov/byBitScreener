@@ -1,42 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
     <title>Title</title>
-    <head>
-        <style>
-            .sidebar {
-                position: fixed;
-                left: -300px; /* or any other value that is equal to the width of the sidebar */
-                transition: left 0.5s;
-                padding-right: 10px;
-                padding-left: 10px;
-                height: 100%;
-                width: 150px;
-                top: 0px;
-            }
+    <style>
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(200px, 1fr));
+            grid-gap: 10px;
+            padding: 5px;
+        }
 
-        </style>
-        <script>
-            window.onmousemove = function(event) {
-                var sidebar = document.querySelector('.sidebar');
-                if (event.pageX < 120) {
-                    sidebar.style.left = '0';
-                } else {
-                    sidebar.style.left = '-300px';
-                }
-            }
-        </script>
-    </head>
+
+        .ticker-name {
+            text-align: center;
+            background-color: #0F0F0D;
+            color: white;
+            font-weight: bold;
+        }
+
+        .ask-price {
+            color: red;
+            font-weight: bold;
+        }
+
+        .bid-price {
+            color: green;
+            font-weight: bold;
+        }
+
+    </style>
+</head>
 <body>
-<div class="container">
-    <div class="sidebar" style="background-color: lightgreen">
-        <p>Sidebar content</p>
-        <div>
-
+<div class="grid">
+    <span th:each="dom : ${doms}">
+        <div style="border: 1px solid black">
+            <div th:text="${dom.ticker_id.tickerName}" class="ticker-name"></div>
+            <div>
+            <span th:each="ask : ${dom.asks}">
+                <div  th:text="${ask.price.toString()}
+                + ' | '
+                + ${ask.amount.toString()}
+                + ' | '
+                + ${ask.range}
+                + '%'
+                + ' | '
+                + ${#numbers.formatDecimal(ask.amount.multiply(ask.price), 0, 'COMMA', 0, 'POINT')}
+                + '$'" class="ask-price"></div>
+            </span>
+            </div>
+            <div>
+            <span th:each="bid : ${dom.bids}">
+                <div  th:text="${bid.price.toString()}
+                + ' | '
+                + ${bid.amount.toString()}
+                + ' | '
+                + ${bid.range}
+                + '%'
+                + ' | '
+                + ${#numbers.formatDecimal(bid.amount.multiply(bid.price), 0, 'COMMA', 0, 'POINT')}
+                + '$'" class="bid-price"></div>
+            </span>
+            </div>
         </div>
-
-    </div>
+    </span>
 </div>
 </body>
+
 </html>
