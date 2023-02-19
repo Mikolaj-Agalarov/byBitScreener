@@ -52,6 +52,7 @@ public class TickerNameService {
                     tickerEntity.setIsOn(true); }
 
                 tickerNameRepository.save(tickerEntity);
+                System.out.println("|||||||||||");
 
 
             } catch (Exception e) {
