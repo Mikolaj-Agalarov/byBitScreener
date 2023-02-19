@@ -18,8 +18,8 @@ public class DOM {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "dom")
+    @OneToOne()
+    @JoinColumn(name = "ticker_id", referencedColumnName = "id")
     private TickerName tickerName;
 
     @Column(name = "highest_bid_price")
