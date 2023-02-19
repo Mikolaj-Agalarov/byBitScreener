@@ -34,7 +34,7 @@
 <div class="grid">
     <span th:each="dom : ${doms}">
         <div style="border: 1px solid black">
-            <div th:text="${dom.ticker_id.tickerName}" class="ticker-name"></div>
+            <div th:text="${dom.tickerName.tickerName}" class="ticker-name"></div>
             <div>
             <span th:each="ask : ${dom.asks}">
                 <div  th:text="${ask.price.toString()}
