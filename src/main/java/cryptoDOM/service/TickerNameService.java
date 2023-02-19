@@ -40,8 +40,7 @@ public class TickerNameService {
 
             try {
                 TickerName tickerEntity = findtickerByTickername(name);
-                System.out.println(name + "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb------------------------------------------------bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
-                + tickerEntity.getTickerName());
+
                 tickerEntity.setVol(vol.setScale(10, RoundingMode.HALF_UP));
                 tickerEntity.setVolValue(volValue);
                 if (volValue.multiply(BigDecimal.valueOf(0.05)).compareTo(BigDecimal.valueOf(30000)) > 0) {
@@ -56,8 +55,7 @@ public class TickerNameService {
 
 
             } catch (Exception e) {
-                System.out.println(name + "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA------------------------------------------------AAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-
+                e.printStackTrace();
                 TickerName tickerName = new TickerName();
                 tickerName.setTickerName(name);
                 tickerName.setVol(vol);
