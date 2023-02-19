@@ -19,8 +19,8 @@ public class DOM {
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "ticker_id", referencedColumnName = "id")
-    private TickerName ticker_id;
+    @JoinColumn(name = "dom")
+    private TickerName tickerName;
 
     @Column(name = "highest_bid_price")
     private Float highest_bid_price;

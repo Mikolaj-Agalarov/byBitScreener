@@ -33,6 +33,6 @@ public class TickerName {
     @Column(name = "vol_value")
     private BigDecimal volValue;
 
-    @OneToOne(mappedBy = "ticker_id", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "tickerName", cascade = CascadeType.ALL)
     private DOM dom;
 }

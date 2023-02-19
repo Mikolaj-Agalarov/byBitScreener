@@ -64,7 +64,7 @@ public class DOMService {
                 JsonArray asks = data.get("asks").getAsJsonArray();
 
                 DOM dom = new DOM();
-                dom.setTicker_id(tickerName);
+                dom.setTickerName(tickerName);
                 dom.setHighest_bid_price(bids.get(0).getAsJsonArray().get(0).getAsFloat());
                 dom.setLowest_ask_price(asks.get(0).getAsJsonArray().get(0).getAsFloat());
 
