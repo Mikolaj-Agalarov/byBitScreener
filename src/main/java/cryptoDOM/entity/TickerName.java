@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.List;
 
 
 @Entity
@@ -33,6 +34,6 @@ public class TickerName {
     @Column(name = "vol_value")
     private BigDecimal volValue;
 
-    @OneToOne(mappedBy = "tickerName")
-    private DOM dom;
+    @OneToMany()
+    private List<DOM> doms;
 }

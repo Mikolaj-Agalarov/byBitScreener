@@ -17,8 +17,9 @@ public class DOM {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @OneToOne()
+    @Column(name = "ticker_id",insertable = false,updatable = false)
+    private Long tickerId;
+    @ManyToOne()
     @JoinColumn(name = "ticker_id", referencedColumnName = "id")
     private TickerName tickerName;
 

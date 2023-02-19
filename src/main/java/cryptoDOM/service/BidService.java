@@ -38,8 +38,8 @@ public class BidService {
 
             // Check if the ask price is higher than the minimum order value for the ticker
             if (tickerName.getTickerName().contains("-BTC")) {
-                BigDecimal btcPrice = new BigDecimal(tickerNameRepository.findBy("BTC-USDT").getDom().getHighest_bid_price().toString());
-
+                //BigDecimal btcPrice = new BigDecimal(tickerNameRepository.findBy("BTC-USDT").getDom().getHighest_bid_price().toString());
+                BigDecimal btcPrice = BigDecimal.ZERO;
                 if (amount.multiply(price).multiply(btcPrice)
                         .compareTo(tickerName.getMinOrderValue().divide(btcPrice)) > 0
                         && range.compareTo(BigDecimal.valueOf(10)) < 0) {
