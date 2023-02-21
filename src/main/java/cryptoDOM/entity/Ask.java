@@ -26,6 +26,9 @@ public class Ask {
     @Column(name = "range")
     private BigDecimal range;
 
+    @Column(name = "percentage_of_daily_volume")
+    private BigDecimal percentageOfDailyVolume;
+
     @ManyToOne
     @JoinColumn(name = "dom_id")
     private DOM dom;

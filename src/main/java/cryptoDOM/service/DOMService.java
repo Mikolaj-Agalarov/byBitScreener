@@ -43,6 +43,10 @@ public class DOMService {
     @Autowired
     private BidService bidService;
 
+    public DOM findByTickerName(String tickerName) {
+        return domRepository.findByTickerName(tickerName);
+    }
+
     public void updateDomsFromAPI() {
         RestTemplate restTemplate = new RestTemplate();
         ExecutorService executorService  = Executors.newFixedThreadPool(10);
@@ -63,33 +67,54 @@ public class DOMService {
                 JsonArray bids = data.get("bids").getAsJsonArray();
                 JsonArray asks = data.get("asks").getAsJsonArray();
 
-                DOM dom = new DOM();
-                dom.setTickerName(tickerName);
-                dom.setHighest_bid_price(bids.get(0).getAsJsonArray().get(0).getAsFloat());
-                dom.setLowest_ask_price(asks.get(0).getAsJsonArray().get(0).getAsFloat());
+                DOM domFromTable = findByTickerName(tickerName.getTickerName());
 
-                domRepository.save(dom);
+                if (domFromTable == null) {
+                    DOM dom = new DOM();
+                    dom.setTickerName(tickerName);
+                    dom.setHighest_bid_price(bids.get(0).getAsJsonArray().get(0).getAsFloat());
+                    dom.setLowest_ask_price(asks.get(0).getAsJsonArray().get(0).getAsFloat());
+                    domRepository.save(dom);
 
-                executorService.submit(() -> {
-                    askService.processAsks(asks, tickerName, dom);
-                });
+                    executorService.submit(() -> {
+                        askService.processAsks(asks, tickerName, dom);
+                    });
 
-                executorService.submit(() -> {
-                    bidService.processBids(bids, tickerName, dom);
-                });
+                    executorService.submit(() -> {
+                        bidService.processBids(bids, tickerName, dom);
+                    });
+                } else {
+                    domFromTable.setHighest_bid_price(bids.get(0).getAsJsonArray().get(0).getAsFloat());
+                    domFromTable.setLowest_ask_price(asks.get(0).getAsJsonArray().get(0).getAsFloat());
 
+                    executorService.submit(() -> {
+                        askService.processAsks(asks, tickerName, domFromTable);
+                    });
+
+                    executorService.submit(() -> {
+                        bidService.processBids(bids, tickerName, domFromTable);
+                    });
+
+                }
+                
                 return null;
             };
 
             executorService.submit(task); // submit the task to the executor
         }
+
     }
 
     public List<DOM> getAllDOMs() {
         return domRepository.findAll();
     }
 
+    public void deleteAll() {
+        domRepository.deleteAll();
+    }
     public List<DOM> getDOMsWithAsksOrBids() {
         return domRepository.findByAsksIsNotNullOrBidsIsNotNull();
     }
+
+
 }

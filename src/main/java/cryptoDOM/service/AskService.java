@@ -20,7 +20,9 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -35,6 +37,11 @@ public class AskService {
     private DOMRepository domRepository;
 
     public void processAsks(JsonArray asks, TickerName tickerName, DOM dom) {
+        List<Ask> existingAsks = askRepository.findByDom(dom);
+
+        Map<BigDecimal, Ask> existingAskMap = existingAsks.stream()
+                .collect(Collectors.toMap(Ask::getPrice, Function.identity()));
+
         for (JsonElement askJson : asks.getAsJsonArray()) {
             JsonArray askData = askJson.getAsJsonArray();
             BigDecimal price = new BigDecimal(askData.get(0).getAsString());
@@ -53,33 +60,55 @@ public class AskService {
                 if (amount.multiply(price).multiply(btcPrice)
                         .compareTo(tickerName.getMinOrderValue().divide(btcPrice)) > 0
                         && range.compareTo(BigDecimal.valueOf(10)) < 0) {
+
+                    // Update the existing ask if present, else create a new one
+                    if (existingAskMap.containsKey(price)) {
+                        Ask ask = existingAskMap.get(price);
+                        ask.setAmount(amount);
+                        ask.setRange(range);
+                        askRepository.save(ask);
+                        System.out.println(tickerName.getTickerName() + " Ask updated");
+                    } else {
+                        Ask ask = new Ask();
+                        ask.setPrice(price);
+                        ask.setAmount(amount);
+                        ask.setDom(dom);
+                        ask.setRange(range);
+                        askRepository.save(ask);
+                        System.out.println(tickerName.getTickerName() + " Ask added");
+                    }
+                }
+            } else if (amount.multiply(price).compareTo(tickerName.getMinOrderValue()) > 0 &&
+                    range.compareTo(BigDecimal.valueOf(10)) < 0) {
+
+                // Update the existing ask if present, else create a new one
+                if (existingAskMap.containsKey(price)) {
+                    Ask ask = existingAskMap.get(price);
+                    ask.setAmount(amount);
+                    ask.setRange(range);
+                    askRepository.save(ask);
+                    System.out.println(tickerName.getTickerName() + " Ask updated");
+                } else {
                     Ask ask = new Ask();
                     ask.setPrice(price);
                     ask.setAmount(amount);
                     ask.setDom(dom);
                     ask.setRange(range);
-
-                    System.out.println(range);
-                    System.out.println("------------------------");
-
                     askRepository.save(ask);
+                    System.out.println(tickerName.getTickerName() + " Ask added");
                 }
-            } else if (amount.multiply(price).compareTo(tickerName.getMinOrderValue()) > 0 &&
-                    range.compareTo(BigDecimal.valueOf(10)) < 0) {
-
-                Ask ask = new Ask();
-                ask.setPrice(price);
-                ask.setAmount(amount);
-                ask.setDom(dom);
-                ask.setRange(range);
-
-                askRepository.save(ask);
-
-                System.out.println(range);
-                System.out.println("------------------------");
             }
         }
+
+        // Delete the asks that are no longer present in the API response
+        existingAsks.stream()
+                .filter(existingAsk -> !existingAskMap.containsKey(existingAsk.getPrice()))
+                .forEach(existingAsk -> {
+                    askRepository.delete(existingAsk);
+                    System.out.println(tickerName.getTickerName() + " Ask deleted");
+                });
     }
+
 
     public List<Ask> getAllAsks() {
         return askRepository.findAll();

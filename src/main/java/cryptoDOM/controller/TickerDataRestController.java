@@ -19,6 +19,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -42,7 +43,7 @@ public class TickerDataRestController {
         this.domService = domServiced;
     }
 
-
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/getdata")
     public void getData(Model model) throws Exception {
         //Getting JSON and converting it into a String from response
@@ -56,12 +57,18 @@ public class TickerDataRestController {
         JsonObject data = jsonObject.get("data").getAsJsonObject();
         JsonArray tickers = data.get("ticker").getAsJsonArray();
 
+        System.out.println("TickerNames table uptade started");
+
         tickerNameService.updateDB(tickers);
+
+        System.out.println("TickerNames table updated");
+
+        System.out.println("DOMS table cleared");
 
         domService.updateDomsFromAPI();
 
-        List<TickerName> tickerNames = tickerNameService.findByIsOnTrue();
-        System.out.println(tickerNames);
+        System.out.println("DOMS table updated");
+
     }
 
     @GetMapping("/showData")

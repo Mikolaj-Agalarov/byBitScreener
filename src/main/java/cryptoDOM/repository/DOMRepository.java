@@ -11,4 +11,6 @@ import java.util.List;
 public interface DOMRepository extends JpaRepository<DOM, Long> {
     @Query("SELECT d FROM DOM d WHERE size(d.asks) > 0 OR size(d.bids) > 0")
     List<DOM> findByAsksIsNotNullOrBidsIsNotNull();
+    @Query("select d from DOM d where d.tickerName.tickerName = ?1")
+    DOM findByTickerName(String tickerName);
 }
