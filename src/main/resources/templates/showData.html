@@ -54,6 +54,20 @@
     </style>
 </head>
 <body>
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background-color: #333; color: #fff;">
+    <div>
+        <a href="/" style="color: #fff;"><i class="fa fa-home"></i> Home</a>
+    </div>
+    <div>
+        <a href="/user/register" style="color: #fff;"><i class="fa fa-user-plus"></i> Register</a>
+    </div>
+    <div>
+        <a href="/user/login" style="color: #fff;"><i class="fa fa-sign-in"></i> Login</a>
+    </div>
+    <div>
+        <a href="/api/showNotifications" style="color: #fff;"><i class="fa fa-eye"></i> Notifications</a>
+    </div>
+</div>
 <div class="grid">
     <span th:each="dom : ${doms}">
         <div class="card">

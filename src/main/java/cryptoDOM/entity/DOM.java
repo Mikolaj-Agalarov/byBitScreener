@@ -24,10 +24,10 @@ public class DOM {
     private TickerName tickerName;
 
     @Column(name = "highest_bid_price")
-    private Float highest_bid_price;
+    private BigDecimal highest_bid_price;
 
     @Column(name = "lowest_ask_price")
-    private Float lowest_ask_price;
+    private BigDecimal lowest_ask_price;
 
     @OneToMany(mappedBy = "dom", cascade = CascadeType.ALL)
     private List<Ask> asks;

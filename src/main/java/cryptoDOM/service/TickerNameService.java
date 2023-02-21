@@ -40,7 +40,9 @@ public class TickerNameService {
                     || name.contains("CUSD-USDT")
                     || name.contains("BUSD-USDT")
                     || name.contains("USDT-USDC")
-                    || name.contains("USDT-DAI")) {
+                    || name.contains("USDT-DAI")
+                    || name.contains("WMT-USDT")
+                    || name.contains("SOL-USDC")) {
                 continue;
             }
 

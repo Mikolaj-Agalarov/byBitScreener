@@ -72,8 +72,8 @@ public class DOMService {
                 if (domFromTable == null) {
                     DOM dom = new DOM();
                     dom.setTickerName(tickerName);
-                    dom.setHighest_bid_price(bids.get(0).getAsJsonArray().get(0).getAsFloat());
-                    dom.setLowest_ask_price(asks.get(0).getAsJsonArray().get(0).getAsFloat());
+                    dom.setHighest_bid_price(bids.get(0).getAsJsonArray().get(0).getAsBigDecimal());
+                    dom.setLowest_ask_price(asks.get(0).getAsJsonArray().get(0).getAsBigDecimal());
                     domRepository.save(dom);
 
                     executorService.submit(() -> {
@@ -84,8 +84,8 @@ public class DOMService {
                         bidService.processBids(bids, tickerName, dom);
                     });
                 } else {
-                    domFromTable.setHighest_bid_price(bids.get(0).getAsJsonArray().get(0).getAsFloat());
-                    domFromTable.setLowest_ask_price(asks.get(0).getAsJsonArray().get(0).getAsFloat());
+                    domFromTable.setHighest_bid_price(bids.get(0).getAsJsonArray().get(0).getAsBigDecimal());
+                    domFromTable.setLowest_ask_price(asks.get(0).getAsJsonArray().get(0).getAsBigDecimal());
 
                     executorService.submit(() -> {
                         askService.processAsks(asks, tickerName, domFromTable);

@@ -25,9 +25,9 @@ import java.util.stream.Collectors;
 public class BidService {
     @Autowired
     private BidRepository bidRepository;
-
     @Autowired
-    private TickerNameRepository tickerNameRepository;
+    private NotificationService notificationService;
+
 
     public void processBids(JsonArray bids, TickerName tickerName, DOM dom) {
         List<Bid> existingBids = bidRepository.findByDom(dom);
@@ -40,7 +40,7 @@ public class BidService {
             JsonArray bidData = bidJson.getAsJsonArray();
             BigDecimal price = new BigDecimal(bidData.get(0).getAsString());
             BigDecimal amount = new BigDecimal(bidData.get(1).getAsString());
-            BigDecimal range = price.subtract(BigDecimal.valueOf(dom.getLowest_ask_price()))
+            BigDecimal range = price.subtract(dom.getLowest_ask_price())
                     .divide(price, 4, RoundingMode.HALF_EVEN)
                     .multiply(BigDecimal.valueOf(100))
                     .abs();
@@ -74,6 +74,8 @@ public class BidService {
                 }
             } else if (amount.multiply(price).compareTo(tickerName.getMinOrderValue()) > 0 &&
                     range.compareTo(BigDecimal.valueOf(10)) < 0) {
+
+                notificationService.createNotificationIfNeeded(tickerName, price, amount, dom);
 
                 // Update the existing ask if present, else create a new one
                 if (existingBidMap.containsKey(price)) {

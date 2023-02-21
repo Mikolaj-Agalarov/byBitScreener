@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import cryptoDOM.entity.Ask;
 import cryptoDOM.entity.DOM;
+import cryptoDOM.entity.Notification;
 import cryptoDOM.entity.TickerName;
 import cryptoDOM.repository.AskRepository;
 import cryptoDOM.repository.DOMRepository;
@@ -29,12 +30,8 @@ import java.util.stream.Collectors;
 public class AskService {
     @Autowired
     private AskRepository askRepository;
-
     @Autowired
-    private TickerNameRepository tickerNameRepository;
-
-    @Autowired
-    private DOMRepository domRepository;
+    private NotificationService notificationService;
 
     public void processAsks(JsonArray asks, TickerName tickerName, DOM dom) {
         List<Ask> existingAsks = askRepository.findByDom(dom);
@@ -46,12 +43,12 @@ public class AskService {
             JsonArray askData = askJson.getAsJsonArray();
             BigDecimal price = new BigDecimal(askData.get(0).getAsString());
             BigDecimal amount = new BigDecimal(askData.get(1).getAsString());
-            BigDecimal range = price.subtract(BigDecimal.valueOf(dom.getLowest_ask_price()))
+            BigDecimal range = price.subtract(dom.getLowest_ask_price())
                     .divide(price, 4, RoundingMode.HALF_EVEN)
                     .multiply(BigDecimal.valueOf(100))
                     .abs();
 
-            // Check if the ask price is higher than the minimum order value for the ticker
+
             if (tickerName.getTickerName().contains("-BTC")) {
                 //TODO fix this
                 //BigDecimal btcPrice = new BigDecimal(tickerNameRepository.findBy("BTC-USDT").getDom().getHighest_bid_price().toString());
@@ -80,6 +77,8 @@ public class AskService {
                 }
             } else if (amount.multiply(price).compareTo(tickerName.getMinOrderValue()) > 0 &&
                     range.compareTo(BigDecimal.valueOf(10)) < 0) {
+
+                notificationService.createNotificationIfNeeded(tickerName, price, amount, dom);
 
                 // Update the existing ask if present, else create a new one
                 if (existingAskMap.containsKey(price)) {
