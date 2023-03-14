@@ -3,6 +3,7 @@ package cryptoDOM.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -12,6 +13,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@ToString
 public class Bid {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -29,7 +31,11 @@ public class Bid {
     @Column(name = "percentage_of_daily_volume")
     private BigDecimal percentageOfDailyVolume;
 
+    @Column(name = "volume_in_usd")
+    private BigDecimal volumeInUsd;
+
     @ManyToOne
     @JoinColumn(name = "dom_id")
+    @ToString.Exclude
     private DOM dom;
 }

@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Screener</title>
+    <title>Title</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="refresh" content="5">
-    <link rel="shortcut icon" type="image/x-icon" href="templates/image/favicon.ico">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -105,12 +104,7 @@
                          alt="Kucoin logo" width="16" height="16" style="padding-left: 5px; padding-top: 2px">
                 </a>
                 <span th:text="${dom.tickerName.tickerName}" style="flex-grow: 1; text-align: center;"></span>
-                <span th:with="word=${#strings.arraySplit(dom.tickerName.tickerName, '-')[0]}">
-                  <a th:href="@{'https://coinmarketcap.com/currencies/' + ${word}}" target="_blank">
-                    <img src="https://seeklogo.com/images/C/coinmarketcap-logo-064D167A0E-seeklogo.com.png"
-                         alt="Coinmarketcap logo" width="16" height="16" style="padding-right: 5px; padding-top: 2px">
-                  </a>
-                </span>
+
             </div>
             <div>
                 <span th:each="ask : ${dom.asks}">

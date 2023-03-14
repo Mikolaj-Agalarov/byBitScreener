@@ -54,7 +54,6 @@ public class UserService {
 
     public User authenticateUser(String username, String password) throws AuthenticationException {
         User user = userRepository.findByUsername(username);
-        System.out.println("sdasdaaasd");
         if (user == null) {
             throw new AuthenticationException("Invalid username or password");
         }

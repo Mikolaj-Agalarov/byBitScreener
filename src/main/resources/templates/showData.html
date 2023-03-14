@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Title</title>
+    <title>Screener</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="refresh" content="5">
+    <link rel="shortcut icon" type="image/x-icon" href="templates/image/favicon.ico">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -12,7 +15,8 @@
             display: grid;
             grid-template-columns: repeat(4, minmax(200px, 1fr));
             grid-gap: 10px;
-            padding: 10px;}
+            padding: 10px;
+        }
 
         .card {
             border: 1px solid #000000;
@@ -39,7 +43,6 @@
             background-color: #FFCCCC;
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-
         }
 
         .bid-price {
@@ -51,27 +54,64 @@
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
         }
+
+        /* Media queries for different screen sizes */
+        @media screen and (max-width: 800px) {
+            .grid {
+                grid-template-columns: repeat(2, minmax(200px, 1fr));
+            }
+        }
+
+        @media screen and (max-width: 600px) {
+            .grid {
+                grid-template-columns: repeat(1, minmax(200px, 1fr));
+            }
+        }
     </style>
 </head>
 <body>
-<div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background-color: #333; color: #fff;">
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background-color: #333; color: #fff; font-family: Arial, sans-serif;">
     <div>
-        <a href="/" style="color: #fff;"><i class="fa fa-home"></i> Home</a>
+        <a href="/" style="color: #fff; text-decoration: none; display: flex; align-items: center;">
+            <i class="fas fa-home" style="margin-right: 5px;"></i>
+            Home
+        </a>
     </div>
     <div>
-        <a href="/user/register" style="color: #fff;"><i class="fa fa-user-plus"></i> Register</a>
+        <a href="/user/register" style="color: #fff; text-decoration: none; display: flex; align-items: center;">
+            <i class="fas fa-user-plus" style="margin-right: 5px;"></i>
+            Register
+        </a>
     </div>
     <div>
-        <a href="/user/login" style="color: #fff;"><i class="fa fa-sign-in"></i> Login</a>
+        <a href="/user/login" style="color: #fff; text-decoration: none; display: flex; align-items: center;">
+            <i class="fas fa-sign-in-alt" style="margin-right: 5px;"></i>
+            Login
+        </a>
     </div>
     <div>
-        <a href="/api/showNotifications" style="color: #fff;"><i class="fa fa-eye"></i> Notifications</a>
+        <a href="/api/showNotifications" style="color: #fff; text-decoration: none; display: flex; align-items: center;">
+            <i class="fas fa-bell" style="margin-right: 5px;"></i>
+            Notifications
+        </a>
     </div>
 </div>
 <div class="grid">
     <span th:each="dom : ${doms}">
         <div class="card">
-            <div th:text="${dom.tickerName.tickerName}" class="ticker-name"></div>
+            <div class="ticker-name" style="display: flex; align-items: center;">
+                <a th:href="@{'https://www.kucoin.com/trade/' + ${dom.tickerName.tickerName}}" target="_blank">
+                    <img src="https://altcoinsbox.com/wp-content/uploads/2023/01/kucoin-logo-300x300.webp"
+                         alt="Kucoin logo" width="16" height="16" style="padding-left: 5px; padding-top: 2px">
+                </a>
+                <span th:text="${dom.tickerName.tickerName}" style="flex-grow: 1; text-align: center;"></span>
+                <span th:with="word=${#strings.arraySplit(dom.tickerName.tickerName, '-')[0]}">
+                  <a th:href="@{'https://coinmarketcap.com/currencies/' + ${word}}" target="_blank">
+                    <img src="https://seeklogo.com/images/C/coinmarketcap-logo-064D167A0E-seeklogo.com.png"
+                         alt="Coinmarketcap logo" width="16" height="16" style="padding-right: 5px; padding-top: 2px">
+                  </a>
+                </span>
+            </div>
             <div>
                 <span th:each="ask : ${dom.asks}">
                     <div th:text="${ask.price.toString()}
@@ -81,8 +121,10 @@
                     + ${ask.range}
                     + '%'
                     + ' | '
-                    + ${#numbers.formatDecimal(ask.amount.multiply(ask.price), 0, 'COMMA', 0, 'POINT')}
-                    + '$'" class="ask-price"></div>
+                    + ${#numbers.formatDecimal(ask.volumeInUsd, 0, 'COMMA', 0, 'POINT')}
+                    + '$'
+                    + ' | '
+                    + ${ask.percentageOfDailyVolume}" class="ask-price"></div>
                 </span>
             </div>
             <div>
@@ -95,7 +137,9 @@
                     + '%'
                     + ' | '
                     + ${#numbers.formatDecimal(bid.amount.multiply(bid.price), 0, 'COMMA', 0, 'POINT')}
-                    + '$'" class="bid-price"></div>
+                    + '$'
+                    + ' | '
+                    + ${bid.percentageOfDailyVolume}" class="bid-price"></div>
                 </span>
             </div>
         </div>

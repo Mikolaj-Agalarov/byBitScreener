@@ -23,10 +23,6 @@ public class NotificationController {
         List<Notification> notifications = notificationService.findAllByOrderByCreatedAtDesc();
         model.addAttribute("notifications", notifications);
 
-
-        for (Notification n:notifications) {
-            System.out.println(n.getCreatedAt());
-        }
         return "notifications";
     }
 

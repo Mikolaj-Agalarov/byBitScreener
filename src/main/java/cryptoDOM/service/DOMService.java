@@ -2,31 +2,27 @@ package cryptoDOM.service;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import cryptoDOM.entity.Ask;
 import cryptoDOM.entity.DOM;
 import cryptoDOM.entity.TickerName;
-import cryptoDOM.repository.AskRepository;
 import cryptoDOM.repository.DOMRepository;
 import cryptoDOM.repository.TickerNameRepository;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 
+import java.time.LocalTime;
 import java.util.List;
 
+import java.util.Optional;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -77,7 +73,7 @@ public class DOMService {
                     domRepository.save(dom);
 
                     executorService.submit(() -> {
-                        askService.processAsks(asks, tickerName, dom);
+                        askService.updateAsks(asks, tickerName, dom);
                     });
 
                     executorService.submit(() -> {
@@ -88,7 +84,7 @@ public class DOMService {
                     domFromTable.setLowest_ask_price(asks.get(0).getAsJsonArray().get(0).getAsBigDecimal());
 
                     executorService.submit(() -> {
-                        askService.processAsks(asks, tickerName, domFromTable);
+                        askService.updateAsks(asks, tickerName, domFromTable);
                     });
 
                     executorService.submit(() -> {
@@ -101,6 +97,7 @@ public class DOMService {
             };
 
             executorService.submit(task); // submit the task to the executor
+
         }
 
     }
@@ -114,6 +111,10 @@ public class DOMService {
     }
     public List<DOM> getDOMsWithAsksOrBids() {
         return domRepository.findByAsksIsNotNullOrBidsIsNotNull();
+    }
+
+    public Optional<DOM> getDomById(Long id) {
+        return domRepository.findById(id);
     }
 
 

@@ -11,6 +11,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalTime;
+import java.util.Date;
+
 @Component
 public class Scheduler {
     @Autowired
@@ -41,5 +44,6 @@ public class Scheduler {
         domService.updateDomsFromAPI();
 
         System.out.println("DOMS table updated");
+
     }
 }

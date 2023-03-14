@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import cryptoDOM.entity.Ask;
+import cryptoDOM.entity.Bid;
 import cryptoDOM.entity.DOM;
 import cryptoDOM.entity.TickerName;
 
@@ -19,7 +21,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/api")
@@ -65,14 +70,35 @@ public class TickerDataRestController {
     }
 
     @GetMapping("/showData")
-    public String showData (Model model) {
+    public String testData (Model model) {
+        List<Ask> asks = askService.findInDescOrder();
 
-        List<DOM> doms = domService.getDOMsWithAsksOrBids();
-        List<TickerName> tickerNames = tickerNameService.getAllTickerNames();
+        List<Bid> bids =bidService.findInDescOrder();
 
+        List<DOM> doms = new ArrayList<>();
+
+        for (Bid b:bids) {
+            if (doms.contains(domService.getDomById(b.getDom().getId()).get())){
+                continue;
+            }
+            if (domService.getDomById(b.getDom().getId()).isPresent()) {
+                DOM dom = domService.getDomById(b.getDom().getId()).get();
+                doms.add(dom);
+
+            }
+        }
+
+        for (Ask a:asks) {
+            if (doms.contains(domService.getDomById(a.getDom().getId()).get())){
+                continue;
+            }
+            if (domService.getDomById(a.getDom().getId()).isPresent() && !doms.contains(domService.getDomById(a.getDom().getId()).get())) {
+                DOM dom = domService.getDomById(a.getDom().getId()).get();
+                doms.add(dom);
+            }
+        }
 
         model.addAttribute("doms", doms);
-        model.addAttribute("tickerNames", tickerNames);
 
         return "showData";
     }

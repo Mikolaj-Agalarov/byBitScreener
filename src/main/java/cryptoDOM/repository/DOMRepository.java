@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface DOMRepository extends JpaRepository<DOM, Long> {
@@ -13,4 +14,6 @@ public interface DOMRepository extends JpaRepository<DOM, Long> {
     List<DOM> findByAsksIsNotNullOrBidsIsNotNull();
     @Query("select d from DOM d where d.tickerName.tickerName = ?1")
     DOM findByTickerName(String tickerName);
+
+    Optional<DOM> findById(Long id);
 }

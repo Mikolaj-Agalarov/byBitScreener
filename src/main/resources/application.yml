@@ -24,3 +24,6 @@ logging:
     org:
       hibernate:
         SQL=DEBUG:
+
+server:
+  port: 8082

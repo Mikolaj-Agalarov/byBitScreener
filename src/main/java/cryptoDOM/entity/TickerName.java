@@ -3,6 +3,7 @@ package cryptoDOM.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -15,6 +16,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class TickerName implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -36,5 +38,6 @@ public class TickerName implements Serializable {
     private BigDecimal volValue;
 
     @OneToMany()
+    @ToString.Exclude
     private List<DOM> doms;
 }

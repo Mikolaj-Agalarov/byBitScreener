@@ -41,8 +41,7 @@ public class TickerNameService {
                     || name.contains("BUSD-USDT")
                     || name.contains("USDT-USDC")
                     || name.contains("USDT-DAI")
-                    || name.contains("WMT-USDT")
-                    || name.contains("SOL-USDC")) {
+                    || name.contains("OUSD-USDT")) {
                 continue;
             }
 
@@ -61,7 +60,7 @@ public class TickerNameService {
                     } else {
                         tickerEntity.setMinOrderValue(BigDecimal.valueOf(30000));
                     }
-                    if (tickerEntity.getVolValue().compareTo(BigDecimal.valueOf(50000)) > 0) {
+                    if (tickerEntity.getVolValue().compareTo(BigDecimal.valueOf(20000)) > 0) {
                         tickerEntity.setIsOn(true);
                     }
 
